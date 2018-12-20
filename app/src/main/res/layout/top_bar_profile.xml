@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+
+
+    <FrameLayout
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:onClick="profileImageClickHandle"
+            android:padding="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:id="@+id/profile_image"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_blank_profile"
+            android:transitionName="profile_image"
+            android:translationZ="@dimen/cardview_default_elevation" />
+
+    </FrameLayout>
+
+
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:fontFamily="@font/averia_serif_libre_bold"
+        android:padding="5dp"
+        android:text="User Name"
+        android:textColor="@color/Black"
+        android:textSize="18sp"
+        android:transitionName="profile_name" />
+
+    <TextView
+        android:layout_gravity="center"
+        android:id="@+id/profile_bio"
+        android:padding="5dp"
+        android:textSize="8sp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:fontFamily="@font/averia_serif_libre_bold"
+        android:text="Life is too short to do anything but lets do something at least :)" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:layout_marginTop="10dp"
+        android:weightSum="9">
+
+
+        <LinearLayout
+            android:onClick="goToFollowersCount"
+            android:id="@+id/profile_followers_linear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/user_followes" />
+
+            <TextView
+
+                android:id="@+id/profile_followers_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="0dp"
+                android:text="100 followers"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:onClick="goToSendMessage"
+            android:id="@+id/profile_send_message_linear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/message_icon" />
+
+            <TextView
+                android:id="@+id/profile_send_message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="0dp"
+                android:text="send message"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:onClick="goToFollowingsCount"
+            android:id="@+id/profile_followings_linear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/user_followings" />
+
+            <TextView
+                android:id="@+id/profile_followings_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="0dp"
+                android:text="100 followings"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+    <Button
+        android:onClick="followButtonCLickHandle"
+        android:layout_marginTop="13dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/profile_follow_button"
+        android:layout_width="120dp"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimaryy"
+        android:fontFamily="@font/averia_serif_libre_bold"
+        android:textColor="@color/White"
+        android:text="follow"
+        android:textAllCaps="false"
+        android:transitionName="edit_photo" />
+
+
+
+
+
+
+
+</LinearLayout>

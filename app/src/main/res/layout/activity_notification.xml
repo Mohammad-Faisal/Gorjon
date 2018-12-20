@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".notification.NotificationActivity">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/notification_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </android.support.v7.widget.RecyclerView>
+
+
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+        android:layout_gravity="bottom|end"
+        android:id="@+id/main_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/White"
+        app:elevation="10dp"
+        app:itemIconTint="@color/Black"
+        app:itemTextColor="@color/Black"
+        app:menu="@menu/navigation" />
+
+</LinearLayout>

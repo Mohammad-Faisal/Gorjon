@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/meeting_add"
+        android:icon="@drawable/ic_home_grey"
+        android:title="Add People" />
+
+    <item
+        android:id="@+id/meeting_leave"
+        android:icon="@drawable/ic_explore_grey"
+        android:title="Leave" />
+
+</menu>

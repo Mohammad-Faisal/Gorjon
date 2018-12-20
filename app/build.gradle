@@ -1,0 +1,103 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "candor.fulki"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode 11
+        versionName "1.10.1"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            resValue "string", "google_maps_api_key", "AIzaSyCuSvsQffXfJQ88qSsWgojS7cHIP6rj6SY"
+        }
+        release {
+            minifyEnabled false
+            resValue "string", "google_maps_api_key", "AIzaSyB2MPJusgrJ790KT5zQcxRBv9idiBd00zM"
+        }
+    }
+    packagingOptions { // kiser jani error khaitesilam pore eita add korsi
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
+    dataBinding {
+        enabled true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    configurations.all {
+        resolutionStrategy {
+            force "com.android.support:appcompat-v7:27.1.0"
+            force 'com.android.support:support-v4:27.1.0'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:support-v4:27.1.0'
+    implementation 'com.android.support:customtabs:27.1.0'
+    implementation 'com.android.support:cardview-v7:27.1.0'
+    implementation 'com.android.support:palette-v7:27.1.0'
+    //firebase ui
+    implementation 'com.google.firebase:firebase-crash:11.8.0'
+    implementation 'com.google.firebase:firebase-firestore:11.8.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.firebaseui:firebase-ui-database:3.2.2'
+    implementation 'com.firebaseui:firebase-ui-auth:3.2.2'
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+    implementation 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
+    //pickasso image loading library
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    //image compressing library
+    implementation 'id.zelory:compressor:2.1.0'
+    //multidex er joonno
+    implementation 'com.android.support:multidex:1.0.1'
+    //for offline support in picasso
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
+    //firebasee
+    implementation 'com.google.firebase:firebase-auth:11.8.0'
+    implementation 'com.google.firebase:firebase-database:11.8.0'
+    implementation 'com.google.firebase:firebase-storage:11.8.0'
+    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation 'com.google.firebase:firebase-messaging:11.8.0'
+    implementation 'com.google.android.gms:play-services-auth:11.8.0'
+    implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.android.gms:play-services-location:11.8.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
+    testImplementation 'junit:junit:4.12'
+
+    //Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+
+
+    //algolia search
+    implementation 'com.algolia:algoliasearch-android:3.+'
+
+
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation files('libs/activation.jar')
+    implementation files('libs/additionnal.jar')
+    implementation files('libs/mail.jar')
+}
+
+apply plugin: 'com.google.gms.google-services'

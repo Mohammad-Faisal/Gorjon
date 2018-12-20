@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".explore.events.ShowEventActivity">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_marginBottom="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:maxHeight="300dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_person_icon"
+                android:id="@+id/show_event_image"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"/>
+
+            <TextView
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textColor="@color/Black"
+                android:text="Title of the event"
+                android:id="@+id/show_event_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textAlignment="center"
+                android:text="this is the description of this event"
+                android:textSize="12sp"
+                android:id="@+id/show_event_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:weightSum="12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_location_green"
+                        />
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="0dp"
+                        android:id="@+id/show_event_locaiton"
+                        android:text="Dhaka Bangladesh"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_clock_blue"
+                        />
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="0dp"
+                        android:id="@+id/show_event_date"
+                        android:text="Monday 2017"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/event_people_list_linear"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_person_icon"
+                        />
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="0dp"
+                        android:id="@+id/show_event_people_cnt"
+                        android:text="100 people"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3">
+
+                    <ImageView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_comment_black"
+                        />
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="0dp"
+                        android:id="@+id/show_event_comment_cnt"
+                        android:text="100 comment"
+                        android:textSize="10sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <Button
+
+                android:textColor="@color/White"
+                android:textAllCaps="false"
+                android:text="join"
+                android:fontFamily="@font/averia_serif_libre_bold"
+                android:background="@color/colorPrimaryy"
+                android:layout_marginTop="15dp"
+                android:id="@+id/show_event_join_btn"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                android:fontFamily="@font/nunito"
+                android:textAlignment="center"
+                android:text="Discussion Section" />
+
+            <android.support.v7.widget.RecyclerView
+
+                android:layout_marginTop="5dp"
+                android:id="@+id/show_event_recycler"
+                android:layout_width="match_parent"
+                android:minHeight="50dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+
+
+    <View
+        android:background="@color/Grey"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"></View>
+
+
+
+    <LinearLayout
+        android:padding="4dp"
+        android:background="@color/White"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/show_event_own_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_blank_profile"/>
+        <EditText
+            android:layout_marginBottom="0dp"
+            android:background="@color/White"
+            android:id="@+id/show_event_comment_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:fontFamily="@font/nunito_extralight"
+            android:layout_weight="1"
+            android:layout_marginLeft="2dp"
+            android:textSize="14sp"
+            android:hint="  Write your comment here" />
+        <ImageButton
+            android:layout_marginLeft="5dp"
+            android:id="@+id/show_event_post_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/send_icon"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>

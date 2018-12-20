@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:focusableInTouchMode="true"
+        android:textAlignment="center"
+        android:fontFamily="@font/nunito"
+        android:background="@color/White"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter your district name"
+        android:id="@+id/distric_list_search_text"
+        android:layout_marginBottom="0dp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/Grey"/>
+    <ListView
+        android:id="@+id/distric_list_listview"
+        android:layout_below="@+id/distric_list_search_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+    </ListView>
+
+</LinearLayout>

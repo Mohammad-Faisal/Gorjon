@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <android.support.v7.widget.CardView
+        android:backgroundTint="@color/White"
+        android:id="@+id/item_notification_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:elevation="5dp">
+
+
+        <LinearLayout
+            android:id="@+id/item_notification_linear"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="65dp"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:transitionName="profile_image"
+                android:id="@+id/item_notification_image"
+                android:layout_width="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_blank_profile"
+                android:layout_gravity="center_vertical"/>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:textColor="@color/Black"
+                    android:textSize="13sp"
+                    android:text="details ........."
+                    android:id="@+id/item_notification_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_marginTop="6dp"
+                    android:text="1 day ago"
+                    android:textSize="8sp"
+                    android:id="@+id/item_notification_time_ago"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/item_notificaion_icon"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_comment_icon"/>
+
+        </LinearLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+
+</RelativeLayout>

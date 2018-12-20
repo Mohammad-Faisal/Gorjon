@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+    tools:context=".profile.ProfileSettingsActivity"
+    android:orientation="vertical">
+
+
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/reg_photo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_blank_profile"
+                android:transitionName="profile_image" />
+
+            <Button
+                android:id="@+id/reg_camera"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorPrimaryy"
+                android:textColor="@color/White"
+                android:fontFamily="@font/nunito"
+                android:text="Set Photo"
+                android:textAllCaps="false"
+                android:transitionName="edit_photo" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="    Name" />
+
+            <EditText
+                android:id="@+id/reg_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_background_change_while_typing"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="    User Name" />
+
+            <EditText
+                android:id="@+id/reg_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_background_change_while_typing"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:id="@+id/reg_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/nunito_extralight"
+                android:text="! username not available"
+                android:textColor="@android:color/holo_red_light"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="    Bio" />
+
+            <EditText
+                android:hint="describe yourself in one sentence..."
+                android:id="@+id/reg_bio"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_background_change_while_typing"
+                android:padding="10dp" />
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="35dp">
+
+
+                <TextView
+                    android:id="@+id/reg_male"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/textview_not_selected"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:gravity="center"
+                    android:text="Male"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/reg_female"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/textview_not_selected"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:gravity="center"
+                    android:text="Female"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:text="Division"
+                    android:gravity="center"
+                    android:textColor="@color/White"
+                    android:background="@drawable/solid_blue_background"
+                    />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/spinner_background">
+                    <Spinner
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:id="@+id/settings_division_spinner"
+                        />
+                </RelativeLayout>
+                <android.support.v7.widget.AppCompatSpinner
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:id="@+id/settings_division_spinnerr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+            </android.support.v7.widget.AppCompatSpinner>
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="    District" />
+
+            <TextView
+                android:id="@+id/settings_district"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_background_change_while_typing"
+                android:padding="10dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="    BirthDate" />
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:weightSum="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_weight="2"
+                    android:id="@+id/settings_birthdate_text"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:background="@drawable/edittext_background_change_while_typing"
+                    />
+
+                <Button
+                    android:clickable="true"
+                    android:textAllCaps="false"
+                    android:layout_weight="1"
+                    android:id="@+id/settings_birthdate_change"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:text="Set"
+                    android:gravity="center"
+                    android:textColor="@color/White"
+                    android:background="@drawable/solid_blue_background"/>
+
+            </LinearLayout>
+
+
+
+
+            <TextView
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="Areas of interest" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/textview_not_selected"
+                >
+
+                <TextView
+                    android:onClick="categoryOnClick"
+                    android:id="@+id/settings_category_a"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:gravity="center"
+                    android:text="Child Marrige"
+                    android:textSize="20sp"
+                    />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/image_tik_a"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_green_tik"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/textview_not_selected"
+                >
+
+                <TextView
+                    android:onClick="categoryOnClick"
+                    android:id="@+id/settings_category_e"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:gravity="center"
+                    android:text="Violence"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/image_tik_e"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_green_tik"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/textview_not_selected"
+                >
+
+
+                <TextView
+                    android:onClick="categoryOnClick"
+                    android:id="@+id/settings_category_d"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:gravity="center"
+                    android:text="Environment"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/image_tik_d"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_green_tik"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/textview_not_selected"
+                >
+
+
+                <TextView
+                    android:onClick="categoryOnClick"
+                    android:id="@+id/settings_category_c"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:gravity="center"
+                    android:text="Women Empowerment"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/image_tik_c"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_green_tik"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/textview_not_selected"
+                >
+                <TextView
+                    android:onClick="categoryOnClick"
+                    android:id="@+id/settings_category_b"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="50dp"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:gravity="center"
+                    android:text="Education"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/image_tik_b"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_green_tik"/>
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:text="Blood Group"
+                    android:gravity="center"
+                    android:textColor="@color/White"
+                    android:background="@drawable/solid_blue_background"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/spinner_background">
+                    <Spinner
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:id="@+id/settings_blood_spinner"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="    Profession" />
+
+            <EditText
+                android:id="@+id/settings_proffession"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_background_change_while_typing"
+                android:padding="10dp" />
+
+
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/nunito"
+                android:text="    Contact No" />
+
+            <EditText
+                android:inputType="number"
+                android:id="@+id/settings_phone_no"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_background_change_while_typing"
+                android:padding="10dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="40dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="7dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/solid_green_background" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textview_information"
+                    android:fontFamily="@font/nunito_extralight"
+                    android:padding="10dp"
+                    android:text="You can always change your informations later in your account settings"
+                    android:textColor="@color/mild_black"
+                    android:textSize="12dp"
+                    tools:fontFamily="@font/nunito" />
+
+
+            </LinearLayout>
+
+
+
+
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:elevation="20dp">
+
+                <Button
+                    android:id="@+id/reg_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimaryy"
+                    android:fontFamily="@font/averia_serif_libre_bold"
+                    android:text="Save"
+                    android:textAllCaps="false"
+                    android:textColor="@color/White"
+                    android:textSize="20sp"
+                    android:textStyle="bold"></Button>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+
+
+
+
+</LinearLayout>

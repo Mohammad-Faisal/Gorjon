@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Theme.Design.NoActionBar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".profile.ProfileActivity">
+
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include layout="@layout/top_bar_profile"/>
+            <android.support.v7.widget.RecyclerView
+                android:onClick="bal"
+                android:visibility="gone"
+                android:id="@+id/profile_badges_recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="50dp"
+                android:id="@+id/profile_posts_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+        android:layout_gravity="bottom|end"
+        android:id="@+id/main_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/White"
+        app:elevation="10dp"
+        app:itemIconTint="@color/Black"
+        app:itemTextColor="@color/Black"
+        app:menu="@menu/navigation" />
+
+
+
+</RelativeLayout>

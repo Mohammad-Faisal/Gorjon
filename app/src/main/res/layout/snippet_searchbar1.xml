@@ -1,0 +1,102 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:id="@+id/lin"
+            android:layout_marginBottom="5dp"
+            android:weightSum="5"
+            >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:text="Filter for topic:"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:id="@+id/district1"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:gravity="center"
+
+                android:layout_weight="3"
+                android:layout_height="wrap_content" >
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_search"
+                    android:focusable="false"
+                    android:hint="Filter topic search by district"
+                    tools:context=".SearchAndFilterList" />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:id="@+id/topiclistmap"
+            android:layout_below="@+id/lin"
+            android:layout_marginTop="2dp"
+            />
+
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/topiclistmap"
+            android:layout_below="@+id/topiclistmap"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/search_btn"
+            android:background="@drawable/search_layout"
+            android:ems="10"
+            android:focusable="true"
+            android:fontFamily="@font/nunito"
+            android:hint="Search here"
+            android:inputType="textPersonName"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:textColor="#999999"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/search"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/search"
+            android:layout_marginRight="30dp"
+            android:background="@android:color/background_light"
+            app:srcCompat="@drawable/search_button" />
+
+
+    </RelativeLayout>
+
+</merge>

@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Gorjon</string>
+    <string name="write_a_caption">Write a Caption.....</string>
+    <string name="change_photo">change photo</string>
+    <string name="dont_use_abusive_or_attacking_language">Dont use abusive or attacking language..</string>
+    <string name="upload">Upload</string>
+
+    <!--
+    <string name="google_maps_key">AIzaSyCuSvsQffXfJQ88qSsWgojS7cHIP6rj6SY</string>
+    -->
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="change">change</string>
+    <string name="minute_ago">minute ago</string>
+    <string name="minutes_ago">minutes ago</string>
+    <string name="hour_ago">hour ago</string>
+    <string name="hours_ago">hours ago</string>
+    <string name="yesterday">yesterday</string>
+    <string name="days_ago">days ago</string>
+
+
+    <string-array name="divisions_array">
+        <item>Select One</item>
+        <item>Dhaka</item>
+        <item>Chittagong</item>
+        <item>Rajshahi</item>
+        <item>Sylhet</item>
+        <item>Bagura</item>
+        <item>Rangpur</item>
+        <item>Barishal</item>
+        <item>Mymenshing</item>
+    </string-array>
+
+
+    <string-array name="blood_array">
+        <item>Select One</item>
+        <item>A+</item>
+        <item>A-</item>
+        <item>B+</item>
+        <item>B-</item>
+        <item>AB+</item>
+        <item>AB-</item>
+        <item>O+</item>
+        <item>O-</item>
+    </string-array>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="title_activity_show_profile_image">ShowProfileImageActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+</resources>

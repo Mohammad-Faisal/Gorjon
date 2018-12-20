@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ShowPost"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".home.ShowPostActivity"
+    android:backgroundTint="@color/White">
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/Grey"/>
+
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_marginBottom="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/White"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+
+            <com.daimajia.slider.library.SliderLayout
+                android:id="@+id/post_slider"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                />
+
+            <com.daimajia.slider.library.Indicators.PagerIndicator
+                android:id="@+id/custom_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/post_user_single_imagee"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/ic_person_grey"
+                    android:transitionName="profile_image"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/post_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/nunito"
+                        android:text="            "
+                        android:textColor="?android:attr/textColorPrimaryNoDisable"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:transitionName="profile_name"/>
+
+                    <TextView
+                        android:fontFamily="@font/nunito_extralight"
+                        android:id="@+id/post_caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textAlignment="viewStart"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                        android:textSize="15sp" />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp">
+                        <ImageView
+                            android:visibility="gone"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/ic_location_grey"
+                            android:layout_marginTop="2dp"/>
+                        <TextView
+                            android:fontFamily="@font/nunito_extralight"
+                            android:layout_marginLeft="5dp"
+                            android:id="@+id/post_time_date"
+                            android:textSize="7sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/darker_gray"
+                            android:text="date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:visibility="gone"
+                            android:layout_marginLeft="5dp"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:src="@drawable/ic_location_grey"
+                            android:layout_marginTop="2dp"/>
+                        <TextView
+                            android:visibility="gone"
+                            android:fontFamily="@font/nunito_extralight"
+                            android:layout_marginLeft="5dp"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/post_location"
+                            android:textSize="7sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/darker_gray"
+                            android:text="Dhaka , Bangladesh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.like.LikeButton
+                        app:anim_scale_factor="3"
+                        android:id="@+id/post_like_button"
+                        app:icon_type="heart"
+                        app:icon_size="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+
+                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:id="@+id/post_like_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textSize="9sp"
+                        android:text="10 likes"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey"/>
+            <TextView
+                android:textAlignment="center"
+                android:id="@+id/show_post_comment_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0 comments"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/Grey"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/show_post_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/Grey"/>
+
+    <LinearLayout
+        android:padding="4dp"
+        android:background="@color/White"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_gravity="center_vertical"
+            android:id="@+id/show_post_own_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_blank_profile"/>
+        <EditText
+            android:layout_marginBottom="0dp"
+            android:background="@color/White"
+            android:id="@+id/comment_write"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:fontFamily="@font/nunito_extralight"
+            android:layout_weight="1"
+            android:layout_marginStart="2dp"
+            android:textSize="14sp"
+            android:hint="  Write your comment here" />
+        <ImageButton
+            android:layout_marginStart="5dp"
+            android:id="@+id/comment_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/send_icon"
+            android:background="@android:color/transparent"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+
+
+
+</android.support.design.widget.CoordinatorLayout>

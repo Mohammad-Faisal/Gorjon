@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:background="@color/White"
+    android:padding="0dp">
+
+    <android.support.v7.widget.CardView
+        android:elevation="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginTop="5dp"
+                android:id="@+id/info_window_image"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_person_grey"
+                />
+
+            <TextView
+                android:fontFamily="@font/nunito"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:text="Name or something at least"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/title"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="#000"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:visibility="gone"
+                android:textAlignment="center"
+                android:text=" description abbout user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="10"
+                android:textSize="14sp"
+                android:textColor="#000"
+                android:id="@+id/snippet"/>
+
+
+                <Button
+                    android:textColor="@color/White"
+                    android:textAllCaps="false"
+                    android:text="visit profile"
+                    android:background="@color/colorPrimaryy"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"/>
+
+
+        </LinearLayout>
+
+
+
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+</LinearLayout>

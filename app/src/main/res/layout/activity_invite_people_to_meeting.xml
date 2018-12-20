@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".chat.meeting.InvitePeopleToMeetingActivity">
+    <LinearLayout
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/toolbar_container">
+
+
+
+                <include layout="@layout/toolbar_search_people"
+                    android:id="@+id/invite_people_search_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </include>
+
+                <com.miguelcatalan.materialsearchview.MaterialSearchView
+                    android:id="@+id/invite_people_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible">
+
+                </com.miguelcatalan.materialsearchview.MaterialSearchView>
+
+            </FrameLayout>
+
+
+        </android.support.design.widget.AppBarLayout>
+
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:background="#787878"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+
+                <View
+                    android:background="#787878"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/invite_people_to_meeting_vertical_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="#fff" />
+                <Button
+                    android:id="@+id/invite_people_to_meeting_go_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/button_shape_1"
+                    android:text="go !" />
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </LinearLayout>
+
+</LinearLayout>

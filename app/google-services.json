@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "145189752512",
+    "firebase_url": "https://fulki-acb31.firebaseio.com",
+    "project_id": "fulki-acb31",
+    "storage_bucket": "fulki-acb31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145189752512:android:8889ab4ad8dcec28",
+        "android_client_info": {
+          "package_name": "candor.fulki"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145189752512-pu8948m2rj0rme5fb39f3jsphtsskbv0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "candor.fulki",
+            "certificate_hash": "a6f8c5623318aa880824aac8c5e78b3a5936f3fe"
+          }
+        },
+        {
+          "client_id": "145189752512-bgg915roaouri2nbur411vgbgsq6fpmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkJpbMCoTChE_YFXo6a94tqzFrU0h1u6Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145189752512-bgg915roaouri2nbur411vgbgsq6fpmo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

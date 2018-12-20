@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryy">#30b55a</color>
+    <color name="colorPrimary">#fff</color>
+    <color name="colorPrimaryDark">#17733c</color>
+    <color name="colorAccent">#5b91ba</color>
+
+    <color name="black_overlay">#66000000</color>
+    <color name="color1">#3d2b1f</color>
+    <color name="color2">#b4ced7</color>
+    <color name="color3">#93C572</color>
+    <color name="color4">#e3f2fd</color>
+    <color name="color5">#bdb76b</color>
+    <color name="color6">#986960</color>
+    <color name="color7">#ace1af</color>
+    <color name="color8">#00cc99</color>
+    <color name="color9">#3c8139</color>
+    <color name="color10">#5b91ba</color>
+    <color name="color11">#a5d380</color>
+    <color name="color12">#5d8aa8</color>
+    <color name="color13">#00e673</color>
+    <color name="color14">#00994d</color>
+    <color name="color15">#00cccc</color>
+
+
+    <color name="grey">#bfbfbf</color>
+    <color name="white">#fff</color>
+    <color name="black">#000000</color>
+    <color name="link_blue">#4d94ff</color>
+    <color name="darkRed">#cc0000</color>
+
+
+    <color name="White">#fff</color>
+    <color name="Grey">#c3c3c3</color>
+    <color name="halkagrey">#E8EBF0</color>
+    <color name="Black">#000000</color>
+
+
+    <color name="osthir">#00bfa5</color>
+    <color name="osthirdark">#008e76</color>
+
+    <color name="base">#00b0ff</color>
+    <color name="base_gree">#9fffe0</color>
+
+
+    <color name="red_error">#f44336</color>
+    <color name="red_dark">#ba000d</color>
+    <color name="red_light">#fce4ec</color>
+
+
+    <color name="yellow_dark">#ffff72</color>
+    <color name="yellow_light">#ffeb3b</color>
+
+
+    <color name="infotextbackgrount">#e8f5e9</color>
+
+
+    <color name="mild_black">#2A3E52</color>
+
+
+</resources>

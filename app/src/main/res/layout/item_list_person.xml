@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/background_search"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="7dp"
+        android:transitionName="profile_image"
+        android:id="@+id/item_list_person_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_person_grey"/>
+
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textColor="@color/Black"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:transitionName="profile_name"
+            android:id="@+id/item_list_person_name"
+            android:text="User Name"
+            android:fontFamily="@font/nunito"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <TextView
+
+            android:layout_marginLeft="10dp"
+            android:textSize="10sp"
+            android:id="@+id/item_list_person_rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="rating : 0"
+            />
+    </LinearLayout>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_gravity="center"
+        android:background="@color/colorPrimaryy"
+        android:layout_width="30dp"
+        android:layout_height="30dp">
+        <ImageButton
+            android:id="@+id/item_list_person_followbtn"
+            android:background="@drawable/follow_checked"
+            android:layout_gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimaryy"
+        android:layout_width="30dp"
+        android:layout_height="30dp">
+        <ImageButton
+            android:id="@+id/item_list_person_msgwbtn"
+            android:background="@drawable/message_icon"
+            android:layout_gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+    </android.support.v7.widget.CardView>
+
+
+
+
+</LinearLayout>
