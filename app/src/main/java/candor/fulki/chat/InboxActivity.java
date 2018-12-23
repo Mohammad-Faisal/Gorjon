@@ -30,7 +30,7 @@ import java.util.List;
 import candor.fulki.chat.conversation.Actives;
 import candor.fulki.chat.conversation.ChatBuddies;
 import candor.fulki.chat.meeting.CreateMeetingActivity;
-import candor.fulki.profile.UserBasic;
+import candor.fulki.models.UserBasic;
 import candor.fulki.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 

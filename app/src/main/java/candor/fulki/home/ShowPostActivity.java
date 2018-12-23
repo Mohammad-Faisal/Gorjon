@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Comments;
+import candor.fulki.models.Likes;
 import candor.fulki.notification.Notifications;
 import candor.fulki.profile.ShowPleopleListActivity;
 import candor.fulki.R;

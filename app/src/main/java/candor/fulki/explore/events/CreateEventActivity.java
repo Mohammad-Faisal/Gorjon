@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Random;
 
 import candor.fulki.explore.ExploreActivity;
-import candor.fulki.home.PostFiles;
+import candor.fulki.models.PostFiles;
 import candor.fulki.explore.people.Ratings;
 import candor.fulki.R;
 import id.zelory.compressor.Compressor;

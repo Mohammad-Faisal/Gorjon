@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import candor.fulki.profile.UserBasic;
+import candor.fulki.models.UserBasic;
 import id.zelory.compressor.Compressor;
 
 public class Functions {

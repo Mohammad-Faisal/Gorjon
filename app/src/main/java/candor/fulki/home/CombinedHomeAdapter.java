@@ -15,7 +15,6 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +54,8 @@ import java.util.List;
 import java.util.Objects;
 
 import candor.fulki.explore.people.Ratings;
-import candor.fulki.general.MainActivity;
+import candor.fulki.models.Comments;
+import candor.fulki.models.Likes;
 import candor.fulki.notification.Notifications;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.profile.ShowPleopleListActivity;

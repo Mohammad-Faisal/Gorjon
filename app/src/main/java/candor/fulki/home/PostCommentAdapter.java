@@ -33,6 +33,8 @@ import candor.fulki.explore.people.Ratings;
 import candor.fulki.general.Functions;
 import candor.fulki.general.GetTimeAgo;
 import candor.fulki.general.MainActivity;
+import candor.fulki.models.Comments;
+import candor.fulki.models.Likes;
 import candor.fulki.notification.Notifications;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.R;

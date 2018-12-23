@@ -30,7 +30,7 @@ import java.util.List;
 
 import candor.fulki.chat.ChatActivity;
 import candor.fulki.chat.GetTimeAgo;
-import candor.fulki.profile.UserBasic;
+import candor.fulki.models.UserBasic;
 import candor.fulki.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 

@@ -15,6 +15,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.ArrayList;
 
 import candor.fulki.R;
+import candor.fulki.models.UserSearch;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 

@@ -38,6 +38,7 @@ import java.util.Random;
 import candor.fulki.explore.people.Ratings;
 import candor.fulki.general.FileUtil;
 import candor.fulki.R;
+import candor.fulki.models.PostFiles;
 import id.zelory.compressor.Compressor;
 
 public class CreatePostActivity extends AppCompatActivity {

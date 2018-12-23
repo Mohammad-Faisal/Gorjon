@@ -66,7 +66,7 @@ import candor.fulki.general.ValueAdapter;
 import candor.fulki.home.HomeActivity;
 import candor.fulki.explore.people.Ratings;
 import candor.fulki.R;
-import candor.fulki.search.UserSearch;
+import candor.fulki.models.UserSearch;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 

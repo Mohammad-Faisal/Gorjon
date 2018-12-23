@@ -33,6 +33,7 @@ import java.util.Locale;
 
 import candor.fulki.general.ValueAdapter;
 import candor.fulki.R;
+import candor.fulki.models.UserSearch;
 
 
 public class SearchActivity extends AppCompatActivity

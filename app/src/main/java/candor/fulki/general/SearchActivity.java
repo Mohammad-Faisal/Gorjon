@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import candor.fulki.profile.ListPeopleAdapter;
-import candor.fulki.profile.UserBasic;
+import candor.fulki.models.UserBasic;
 import candor.fulki.R;
 
 public class SearchActivity extends AppCompatActivity {

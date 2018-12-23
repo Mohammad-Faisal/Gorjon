@@ -4,9 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 import candor.fulki.R;
+import candor.fulki.models.UserBasic;
 import timber.log.Timber;
 
 public class ShowPleopleListActivity extends AppCompatActivity {
