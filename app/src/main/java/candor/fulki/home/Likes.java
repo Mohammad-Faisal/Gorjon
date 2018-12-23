@@ -4,17 +4,17 @@ public class Likes {
 
 
 
-    String id;
-    String name;
-    String thumb_image;
-    String notification_id;
-    String timestamp;
+    private String id;
+    private String name;
+    private String thumb_image;
+    private String notification_id;
+    private String timestamp;
 
 
     public Likes() {
     }
 
-    public Likes(String id, String name, String thumb_image, String notification_id, String timestamp) {
+    Likes(String id, String name, String thumb_image, String notification_id, String timestamp) {
 
         this.id = id;
         this.name = name;

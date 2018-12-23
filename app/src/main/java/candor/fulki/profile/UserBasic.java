@@ -2,9 +2,9 @@ package candor.fulki.profile;
 
 public class UserBasic {
 
-    String mUserID;
-    String mUserName;
-    String mUserThumbImage;
+    private String mUserID;
+    private String mUserName;
+    private String mUserThumbImage;
 
     public UserBasic() {
     }
@@ -16,7 +16,6 @@ public class UserBasic {
     }
 
     public String getmUserID() {
-
         return mUserID;
     }
 

@@ -22,7 +22,6 @@ import timber.log.Timber;
 public class ShowPleopleListActivity extends AppCompatActivity {
 
 
-    private static final String TAG = "ShowPleopleListActivity";
 
     private final List<UserBasic> userList = new ArrayList<>();
     private ListPeopleAdapter mPeopleAdapter;
@@ -30,7 +29,6 @@ public class ShowPleopleListActivity extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore;
     private DocumentSnapshot lastVisible;
-    boolean isFirstPageLoaded = false;
     String type = "";
     String userID = "";
 

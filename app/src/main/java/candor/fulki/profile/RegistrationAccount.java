@@ -109,8 +109,7 @@ public class RegistrationAccount extends AppCompatActivity {
 
 
         mRegPhoto.setOnClickListener(v -> {
-            Functions functions = new Functions();
-            functions.BringImagePicker(RegistrationAccount.this);
+            Functions.BringImagePicker(RegistrationAccount.this);
         });
 
         mRegCamera.setOnClickListener(v -> checkPermissionStorage());
@@ -220,15 +219,12 @@ public class RegistrationAccount extends AppCompatActivity {
                                     }
                                 });
                             });
-
-
                         })
                         .addOnFailureListener(exception -> {
                             mProgress.dismiss();
                             Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
                             Timber.tag("Main Photo Upload   :  ").w(exception);
                         });
-
             }
         });
     }
@@ -285,8 +281,7 @@ public class RegistrationAccount extends AppCompatActivity {
 
                 imageUri = result.getUri();
                 mRegPhoto.setImageURI(imageUri);
-                Functions functions = new Functions();
-                thumb_byte = functions.CompressImage(imageUri , this);
+                thumb_byte = Functions.CompressImage(imageUri , this);
 
 
                 //creating filepath for uploading the image
@@ -303,19 +298,16 @@ public class RegistrationAccount extends AppCompatActivity {
 
     public void checkPermissionStorage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             if (ContextCompat.checkSelfPermission(RegistrationAccount.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(RegistrationAccount.this, "Permission granted ....  try now", Toast.LENGTH_LONG).show();
                 ActivityCompat.requestPermissions(RegistrationAccount.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
             } else {
-                Functions functions = new Functions();
-                functions.BringImagePicker(RegistrationAccount.this);
+                Functions.BringImagePicker(RegistrationAccount.this);
             }
         }
         else{
-            Functions functions = new Functions();
-            functions.BringImagePicker(RegistrationAccount.this);
+            Functions.BringImagePicker(RegistrationAccount.this);
         }
     }
 }
