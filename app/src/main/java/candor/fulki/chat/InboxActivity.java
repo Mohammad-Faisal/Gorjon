@@ -27,8 +27,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import candor.fulki.chat.conversation.Actives;
-import candor.fulki.chat.conversation.ChatBuddies;
+import candor.fulki.models.Actives;
+import candor.fulki.models.ChatBuddies;
 import candor.fulki.chat.meeting.CreateMeetingActivity;
 import candor.fulki.models.UserBasic;
 import candor.fulki.R;

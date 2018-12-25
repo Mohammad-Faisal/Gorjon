@@ -37,8 +37,9 @@ import java.util.List;
 
 import candor.fulki.general.GetTimeAgo;
 import candor.fulki.general.MainActivity;
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.home.ShowPostActivity;
+import candor.fulki.models.Notifications;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.R;
 import de.hdodenhof.circleimageview.CircleImageView;

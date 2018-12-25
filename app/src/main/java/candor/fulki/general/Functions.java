@@ -1,12 +1,22 @@
 package candor.fulki.general;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Base64;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -15,14 +25,21 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+import candor.fulki.models.Ratings;
 import candor.fulki.models.UserBasic;
 import id.zelory.compressor.Compressor;
+import timber.log.Timber;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class Functions {
 
-    UserBasic userBasic = new UserBasic();
+    private UserBasic userBasic = new UserBasic();
+    private static final int RC_CHECK_PERMISSION_LOCATION = 2;
 
     public Functions() {
     }
@@ -44,8 +61,7 @@ public class Functions {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         assert thumb_bitmap != null;
         thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
-        final byte[] thumb_byte = baos.toByteArray();
-        return thumb_byte;
+        return baos.toByteArray();
     }
 
 
@@ -54,6 +70,47 @@ public class Functions {
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(1, 1)
                 .start(context);
+    }
+
+    public static void checkPermission(Context context , Activity activity){
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                ){//Can add more as per requirement
+
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    RC_CHECK_PERMISSION_LOCATION);
+
+        }
+    }
+
+    public static boolean isDataAvailable(Context context) {
+        android.net.ConnectivityManager connectivityManager = (android.net.ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
+        android.net.NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+
+    public static void addRating(String mUserID) {
+
+        Log.d("Functions", "addRating:    "+mUserID);
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
+                .document(mUserID);
+        firebaseFirestore.runTransaction(transaction -> {
+
+            Ratings ratings = transaction.get(ratingRef)
+                    .toObject(Ratings.class);
+
+            assert ratings != null;
+            long curRating = ratings.getRating();
+            long nextRating = curRating + 15;
+
+            ratings.setRating(nextRating);
+            transaction.set(ratingRef, ratings);
+            return null;
+        });
     }
 
     public static long getTimeStamp(){
@@ -75,6 +132,24 @@ public class Functions {
             }
         });
         return userBasic;
+    }
+
+
+    public  static void printHashKey(Context context) {
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                //Log.i(TAG, "printHashKey() Hash Key: " + hashKey);
+                Timber.tag("Fulki").d(hashKey);
+            }
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("Fulki", "printHashKey()", e);
+        } catch (Exception e) {
+            Log.e("Fulki", "printHashKey()", e);
+        }
     }
 
 }

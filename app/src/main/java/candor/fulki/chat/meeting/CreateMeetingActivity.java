@@ -31,6 +31,7 @@ import java.io.IOException;
 
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
+import candor.fulki.models.MeetingRooms;
 import id.zelory.compressor.Compressor;
 
 public class CreateMeetingActivity extends AppCompatActivity {
@@ -140,7 +141,7 @@ public class CreateMeetingActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if(task.isSuccessful()){
-                            Uri downloadUrlImage = task.getResult().getDownloadUrl();
+                            Uri downloadUrlImage = task.getResult().getUploadSessionUri();
                             final String downLoadUriStringImage  = downloadUrlImage.toString();
                             image_download_url = downLoadUriStringImage;
                             progressBar.setVisibility(View.GONE);

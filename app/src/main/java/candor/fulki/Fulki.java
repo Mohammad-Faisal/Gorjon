@@ -1,6 +1,7 @@
 package candor.fulki;
 
-import com.google.firebase.crash.FirebaseCrash;
+//import com.google.firebase.crash.FirebaseCrash;
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.content.Context;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 
 import candor.fulki.utilities.UniversalImageLoader;
+import io.fabric.sdk.android.Fabric;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
@@ -38,6 +40,7 @@ public class Fulki extends MultiDexApplication {
         super.onCreate();
         /* Enable disk persistence  */
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        Fabric.with(this, new Crashlytics());
 
         //initImageLoader(this);
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(this);
@@ -87,12 +90,6 @@ public class Fulki extends MultiDexApplication {
         protected void log(int priority, String tag, @NonNull String message, Throwable t) {
             if (priority == Log.VERBOSE || priority == Log.DEBUG) {
                 return;
-            }
-
-            FirebaseCrash.log(message);
-
-            if (t != null) {
-                FirebaseCrash.report(t);
             }
         }
     }

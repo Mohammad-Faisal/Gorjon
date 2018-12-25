@@ -33,9 +33,9 @@ import java.util.Map;
 import java.util.Random;
 
 import candor.fulki.chat.ChatActivity;
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.models.UserBasic;
-import candor.fulki.notification.Notifications;
+import candor.fulki.models.Notifications;
 import candor.fulki.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;

@@ -1,4 +1,4 @@
-package candor.fulki.explore.events;
+package candor.fulki.models;
 
 public class Events {
 

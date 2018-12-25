@@ -1,13 +1,13 @@
-package candor.fulki.explore.events;
+package candor.fulki.models;
 
 public class Joins {
 
 
-    String id;
-    String name;
-    String thumb_image;
-    String notification_id;
-    String timestamp;
+    private String id;
+    private String name;
+    private String thumb_image;
+    private String notification_id;
+    private String timestamp;
 
     public Joins() {
     }
@@ -22,7 +22,6 @@ public class Joins {
     }
 
     public String getId() {
-
         return id;
     }
 

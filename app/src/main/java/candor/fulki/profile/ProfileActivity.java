@@ -45,10 +45,10 @@ import candor.fulki.explore.ExploreActivity;
 import candor.fulki.home.CombinedHomeAdapter;
 import candor.fulki.home.CombinedPosts;
 import candor.fulki.home.HomeActivity;
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.MapsActivity;
 import candor.fulki.notification.NotificationActivity;
-import candor.fulki.notification.Notifications;
+import candor.fulki.models.Notifications;
 import candor.fulki.R;
 import candor.fulki.search.SearchActivity;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -170,7 +170,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
     public void goToFollowersCount(View view) {
         addRating(mUserID , 1);
         Intent followersIntent = new Intent(ProfileActivity.this ,ShowPleopleListActivity.class);

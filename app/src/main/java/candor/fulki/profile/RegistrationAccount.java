@@ -144,7 +144,7 @@ public class RegistrationAccount extends AppCompatActivity {
                 //uploading the main image
                 imageFilePath.putFile(imageUri)
                         .addOnSuccessListener(taskSnapshot -> {
-                            Uri downloadUrlImage = taskSnapshot.getDownloadUrl();
+                            Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
                             assert downloadUrlImage != null;
                             mainImageUrl =  downloadUrlImage.toString();
 
@@ -156,7 +156,7 @@ public class RegistrationAccount extends AppCompatActivity {
                                 Timber.tag("Thumb  Photo Upload:  ").w(exception);
                             }).addOnSuccessListener(taskSnapshot1 -> {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                                Uri downloadUrlThumb = taskSnapshot1.getDownloadUrl();
+                                Uri downloadUrlThumb = taskSnapshot1.getUploadSessionUri();
                                 assert downloadUrlThumb != null;
                                 thumbImageUrl  = downloadUrlThumb.toString();
 

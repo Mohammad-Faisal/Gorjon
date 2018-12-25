@@ -1,4 +1,4 @@
-package candor.fulki.chat.meeting;
+package candor.fulki.models;
 
 
 import java.io.Serializable;

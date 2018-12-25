@@ -1,11 +1,11 @@
-package candor.fulki.explore.people;
+package candor.fulki.models;
 
 public class Ratings {
 
-    String user_name;
-    String user_id;
-    String thumb_image;
-    long  rating;
+    private String user_name;
+    private String user_id;
+    private String thumb_image;
+    private long  rating;
 
     public String getUser_name() {
         return user_name;

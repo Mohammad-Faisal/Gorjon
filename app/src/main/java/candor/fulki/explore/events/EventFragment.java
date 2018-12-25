@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import candor.fulki.R;
+import candor.fulki.models.Events;
 
 public class EventFragment extends Fragment {
 

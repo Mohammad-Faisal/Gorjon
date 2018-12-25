@@ -10,7 +10,11 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+
+
+
     <application
+
         android:name=".Fulki"
         android:allowBackup="true"
         android:icon="@drawable/fulki_logo"
@@ -28,6 +32,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <activity
             android:name=".profile.RegistrationAccount"
             android:screenOrientation="portrait" />
@@ -114,7 +120,6 @@
         <activity
             android:name=".home.HomeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".general.FragmentHolderActivity" />
         <activity
             android:name=".profile.ShowProfileImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -122,7 +127,12 @@
             android:parentActivityName=".profile.ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".home.CreatePostActivity"></activity>
+        <activity android:name=".home.CreatePostActivity"/>
+
+
+
+
+
     </application>
 
 </manifest>

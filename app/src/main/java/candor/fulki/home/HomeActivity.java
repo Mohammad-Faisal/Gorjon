@@ -137,7 +137,10 @@ public class HomeActivity extends AppCompatActivity {
             AsyncPostLoading runner = new AsyncPostLoading();
             runner.execute(1);
 
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+
+
+          recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     Boolean reachedBottom = !recyclerView.canScrollVertically(1);
@@ -295,8 +298,6 @@ public class HomeActivity extends AppCompatActivity {
         BottomNavigationViewEx mNavigation = findViewById(R.id.main_bottom_nav);
         mNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mNavigation.enableAnimation(false);
-        mNavigation.enableShiftingMode(false);
-        mNavigation.enableItemShiftingMode(false);
         mNavigation.setIconSize(25, 25);
         mNavigation.setTextSize(7);
     }

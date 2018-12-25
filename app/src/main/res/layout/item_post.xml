@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:textColor="@color/common_google_signin_btn_text_dark_focused"
             android:textSize="15sp"/>
 
@@ -178,10 +178,10 @@
                 >
 
                 <com.like.LikeButton
-                    app:anim_scale_factor="1.5"
+                    app:anim_scale_factor="1.0"
                     android:id="@+id/post_like_button"
                     app:icon_type="heart"
-                    app:icon_size="22dp"
+                    app:icon_size="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -193,7 +193,8 @@
                     android:layout_height="match_parent"
                     android:textAlignment="center"
                     android:textSize="9sp"
-                    android:text="10 likes"/>
+                    android:text="10 likes"
+                    andriod:ignore="SmallSp" />
             </LinearLayout>
 
             <LinearLayout

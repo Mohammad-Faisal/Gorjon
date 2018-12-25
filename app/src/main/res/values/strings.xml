@@ -50,4 +50,10 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
+
+    <string name="facebook_app_id">1823841004408236</string>
+    <string name="facebook_application_id">1823841004408236</string>
+    <string name="fb_login_protocol_scheme">fb1823841004408236</string>
+
+
 </resources>

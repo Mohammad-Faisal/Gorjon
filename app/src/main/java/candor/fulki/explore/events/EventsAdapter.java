@@ -24,8 +24,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.R;
+import candor.fulki.models.Events;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> {
 

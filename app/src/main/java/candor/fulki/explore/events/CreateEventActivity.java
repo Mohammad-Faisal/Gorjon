@@ -39,7 +39,7 @@ import java.util.Random;
 
 import candor.fulki.explore.ExploreActivity;
 import candor.fulki.models.PostFiles;
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.R;
 import id.zelory.compressor.Compressor;
 
@@ -172,14 +172,14 @@ public class CreateEventActivity extends AppCompatActivity {
         imageFilePath.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
 
-                    Uri downloadUrlImage = taskSnapshot.getDownloadUrl();
+                    Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
                     final String mainImageUrl =  downloadUrlImage.toString();
                     UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
                     uploadThumbTask.addOnFailureListener(exception -> {
                         Toast.makeText(CreateEventActivity.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
                         Log.w("Thumb  Photo Upload:  " , exception);
                     }).addOnSuccessListener(taskSnapshot1 -> {
-                        Uri downloadUrlThumb = taskSnapshot1.getDownloadUrl();
+                        Uri downloadUrlThumb = taskSnapshot1.getUploadSessionUri();
                         final String thumbImageUrl  = downloadUrlThumb.toString();
 
 

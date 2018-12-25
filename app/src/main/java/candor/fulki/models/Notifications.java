@@ -1,4 +1,4 @@
-package candor.fulki.notification;
+package candor.fulki.models;
 
 /**
  * Created by Mohammad Faisal on 1/30/2018.

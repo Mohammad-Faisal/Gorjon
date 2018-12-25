@@ -53,10 +53,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
-import candor.fulki.notification.Notifications;
+import candor.fulki.models.Notifications;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.profile.ShowPleopleListActivity;
 import candor.fulki.R;
@@ -72,7 +72,7 @@ public class CombinedHomeAdapter extends RecyclerView.Adapter<CombinedHomeAdapte
 
     private static final String TAG = "CombinedHomeAdapter";
 
-    List <CombinedPosts > data;
+    private List <CombinedPosts > data;
     private Context context;
     private Activity activity;
 
@@ -83,6 +83,8 @@ public class CombinedHomeAdapter extends RecyclerView.Adapter<CombinedHomeAdapte
     private String primaryUserName , primaryUserThumbImage;
 
     private ProgressDialog mProgress;
+
+
 
     public CombinedHomeAdapter ( List<CombinedPosts> data , Context context , Activity activity ){
         this.data = data;
@@ -99,7 +101,7 @@ public class CombinedHomeAdapter extends RecyclerView.Adapter<CombinedHomeAdapte
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         if(viewType==0){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_text, parent, false);
@@ -111,7 +113,7 @@ public class CombinedHomeAdapter extends RecyclerView.Adapter<CombinedHomeAdapte
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CombinedPosts post = data.get(position);
 
         HashMap<String,String> Hash_file_maps;
@@ -141,6 +143,7 @@ public class CombinedHomeAdapter extends RecyclerView.Adapter<CombinedHomeAdapte
         holder.setPostDateTime(timedate);
         holder.setPostLikeCount(like_cnt);
         holder.setPostCommentCount(comment_cnt);
+
 
 
         firebaseFirestore.collection("users").document(primary_user_id).get().addOnSuccessListener(documentSnapshot -> {

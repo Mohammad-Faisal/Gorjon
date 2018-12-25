@@ -35,6 +35,8 @@ import android.widget.Toast;
 
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -64,7 +66,7 @@ import candor.fulki.general.Functions;
 import candor.fulki.general.MainActivity;
 import candor.fulki.general.ValueAdapter;
 import candor.fulki.home.HomeActivity;
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.R;
 import candor.fulki.models.UserSearch;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -359,7 +361,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
 
         imageFilePath.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    Uri downloadUrlImage = taskSnapshot.getDownloadUrl();
+                    Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
                     mainImageUrlString =  downloadUrlImage.toString();
                     UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
                     uploadThumbTask.addOnFailureListener(exception -> {
@@ -368,7 +370,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
                         Timber.tag("Thumb  Photo Upload:  ").w(exception);
                     }).addOnSuccessListener(taskSnapshot1 -> {
 
-                        Uri downloadUrlThumb = taskSnapshot1.getDownloadUrl();
+                        Uri downloadUrlThumb = taskSnapshot1.getUploadSessionUri();
                         assert downloadUrlThumb != null;
                         thumbImageUrlString  = downloadUrlThumb.toString();
                         Timber.d("uploadImage:    is succesfull ");
@@ -388,6 +390,22 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         return len <= 3;
     }
 
+
+    /*GraphRequest request = GraphRequest.newMeRequest(
+            accessToken,
+            new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(
+                        JSONObject object,
+                        GraphResponse response) {
+                    // Application code
+                }
+            });
+    Bundle parameters = new Bundle();
+    parameters.putString("fields", "id,name,link");
+    request.setParameters(parameters);
+    request.executeAsync();
+*/
     private void upload(){
 
         mProgress = new ProgressDialog(ProfileSettingsActivity.this);
@@ -725,7 +743,6 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
             default:
                 //nothing?
         }
-
     }
 
     private void setupSpinner(){

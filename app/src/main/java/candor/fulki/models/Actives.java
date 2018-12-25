@@ -1,7 +1,8 @@
-package candor.fulki.chat.conversation;
+package candor.fulki.models;
 
 
 public class Actives {
+
     private String userID;
     private String name;
     private String thumb_image;

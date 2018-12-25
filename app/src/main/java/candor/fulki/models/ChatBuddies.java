@@ -1,4 +1,4 @@
-package candor.fulki.chat.conversation;
+package candor.fulki.models;
 
 
 public class ChatBuddies {

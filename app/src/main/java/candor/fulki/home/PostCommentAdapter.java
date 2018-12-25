@@ -1,5 +1,6 @@
 package candor.fulki.home;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -28,17 +29,19 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.general.Functions;
 import candor.fulki.general.GetTimeAgo;
 import candor.fulki.general.MainActivity;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
-import candor.fulki.notification.Notifications;
+import candor.fulki.models.Notifications;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.R;
 import de.hdodenhof.circleimageview.CircleImageView;
+import timber.log.Timber;
 
 /**
  * Created by Mohammad Faisal on 1/29/2018.
@@ -69,19 +72,20 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
 
     }
 
+    @NonNull
     @Override
-    public PostCommentAdapter.PostCommentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostCommentAdapter.PostCommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v;
         v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent , false);
         return new PostCommentAdapter.PostCommentViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final PostCommentAdapter.PostCommentViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PostCommentAdapter.PostCommentViewHolder holder, int position) {
         Comments c = mCommentList.get(position);
         holder.commentText.setText(c.getComment());
         final String mCurrentCommenterID = c.getUid();  //who has posted the comment
-        final String mUserID  = FirebaseAuth.getInstance().getCurrentUser().getUid();  //currently je logged in
+        final String mUserID  = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();  //currently je logged in
         final String mCommentId  = c.getCommentId();
         final String mPostID = c.getPostID();
         final String mTimeStamp = c.getTime_stamp();
@@ -103,7 +107,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
                 holder.setPostUserName(mUserName);
             } else {
 
-                Log.d(TAG, "onComplete: " + task.getException().toString());
+                Timber.d("onComplete: " + task.getException().toString());
             }
         });
         //setting like count
@@ -135,7 +139,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
                     }
                 } else {
                     isLiked = false;
-                    Log.w(TAG, "onComplete: ", task.getException());
+                    Timber.tag(TAG).w(task.getException(), "onComplete: ");
                     holder.commentLove.setBackgroundResource(R.drawable.ic_love_empty);
                 }
             }
@@ -165,9 +169,9 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
                 writeBatch.set(firebaseFirestore.collection("comment_likes/" + mPostID + "/"+mCommentId).document(mUserID), mLikes);
                 writeBatch.commit().addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        Log.d(TAG, "onComplete:    comment love is successfull");
+                        Timber.d("onComplete:    comment love is successfull");
                     }else{
-                        Log.d(TAG, "onComplete:   comment love is not succesful");
+                        Timber.d("onComplete:   comment love is not succesful");
                     }
                 });
 
@@ -201,17 +205,17 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            Log.d(TAG, "onComplete:     comment love delete successful");
+                                            Timber.d("onComplete:     comment love delete successful");
                                         }else{
-                                            Log.d(TAG, "onComplete:   comment delete is not succesful");
+                                            Timber.d("onComplete:   comment delete is not succesful");
                                         }
                                     }
                                 });
                             } else {
-                                Log.d(TAG, "No such document");
+                                Timber.d("No such document");
                             }
                         } else {
-                            Log.d(TAG, "get failed with ", task.getException());
+                            Timber.d(task.getException(), "get failed with ");
                         }
 
 
@@ -272,13 +276,13 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
             commentName.setText(userName);
         }
 
-        private Task<Void> addRating( String mUserID  , int factor) {
+        private void addRating(String mUserID  , int factor) {
 
             FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            Log.d(TAG, "addRating:   function calledd !!!!");
+            Timber.d("addRating:   function calledd !!!!");
             final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
                     .document(mUserID);
-            return firebaseFirestore.runTransaction(transaction -> {
+            firebaseFirestore.runTransaction(transaction -> {
 
                 Ratings ratings = transaction.get(ratingRef)
                         .toObject(Ratings.class);
@@ -291,6 +295,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
             });
         }
 
+        @SuppressLint("SetTextI18n")
         private void setLikeCount(long cnt){
 
             if(cnt>1){
@@ -303,7 +308,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
 
         private void addLike( String mPostID , int factor) {
             FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            Log.d(TAG, "addLike:   function calledd !!!!");
+            Timber.d("addLike:   function calledd !!!!");
             final DocumentReference postRef = FirebaseFirestore.getInstance().collection("posts")
                     .document(mPostID);
 
@@ -315,14 +320,14 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
                 long curShares = post.getShare_cnt();
 
                 long nextLike = curLikes + factor;
-                Log.d(TAG, "addLike:     like number is  "+nextLike);
+                Timber.d("addLike:     like number is  " + nextLike);
                 long nextComment = curComments + factor;
                 long nextShare = curShares + factor;
                 HashMap< String ,  Object > updateMap = new HashMap<>();
                 updateMap.put("like_cnt" , nextLike);
                 transaction.update(postRef , updateMap);
                 return nextLike;
-            }).addOnSuccessListener(aLong -> setLikeCount(aLong));
+            }).addOnSuccessListener(this::setLikeCount);
         }
 
     }

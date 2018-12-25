@@ -2,8 +2,6 @@ package candor.fulki.models;
 
 public class Likes {
 
-
-
     private String id;
     private String name;
     private String thumb_image;
@@ -14,7 +12,7 @@ public class Likes {
     public Likes() {
     }
 
-    Likes(String id, String name, String thumb_image, String notification_id, String timestamp) {
+    public Likes(String id, String name, String thumb_image, String notification_id, String timestamp) {
 
         this.id = id;
         this.name = name;

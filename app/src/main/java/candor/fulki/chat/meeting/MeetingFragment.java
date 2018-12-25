@@ -18,6 +18,7 @@ import java.util.List;
 
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
+import candor.fulki.models.MeetingRooms;
 
 public class MeetingFragment extends Fragment {
 

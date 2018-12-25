@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import candor.fulki.R;
+import candor.fulki.models.Messages;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 

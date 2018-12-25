@@ -28,7 +28,6 @@ public class Users {
     }
 
     public String getName() {
-
         return name;
     }
 

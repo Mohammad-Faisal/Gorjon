@@ -11,6 +11,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import java.util.ArrayList;
 
 import candor.fulki.chat.conversation.ConversationFragment;
+import candor.fulki.models.MeetingRooms;
 import candor.fulki.models.Users;
 import candor.fulki.R;
 

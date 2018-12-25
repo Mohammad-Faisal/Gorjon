@@ -62,8 +62,9 @@ import java.util.Locale;
 import java.util.Map;
 
 import candor.fulki.general.MainActivity;
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.models.Ratings;
 import candor.fulki.profile.ProfileActivity;
+import timber.log.Timber;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -217,7 +218,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        Log.d(TAG, "onMapReady:   entered !!!!!!!!!!!!!!");
+        Timber.d("onMapReady:   entered !!!!!!!!!!!!!!");
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dhaka, DEFAULT_ZOOM));
@@ -247,7 +248,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     markerfinal.showInfoWindow();
                 }
             }catch (NullPointerException e){
-                Log.e(TAG, "onClick: NullPointerException: " + e.getMessage() );
+                Timber.e("onClick: NullPointerException: " + e.getMessage());
             }
             return false;
         });
@@ -255,13 +256,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void changeinlocationdata(){
-        Log.d(TAG, "changeinlocationdata: locaiton changed !!");
+        Timber.d("changeinlocationdata: locaiton changed !!");
         arrayList.clear();
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("locations").addSnapshotListener((documentSnapshots, e) -> {
             if(e!=null){
-                Log.w(TAG, "onEvent:  listen failed ",e );
+                Timber.tag(TAG).w(e, "onEvent:  listen failed ");
             }
             if(!documentSnapshots.isEmpty()){
                 for(DocumentChange doc: documentSnapshots.getDocumentChanges()){
@@ -272,7 +273,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String place_name = doc.getDocument().get("place_name").toString();
                         double lat = doc.getDocument().getDouble("lat");
                         double lng = doc.getDocument().getDouble("lng");
-                        Log.d(TAG, "changeinlocationdata:   got name   "+lat);
+                        Timber.d("changeinlocationdata:   got name   " + lat);
                         Locationdetail singleLocation  = new Locationdetail(name , user_id , thumb_image ,lat , lng , place_name);
                         arrayList.add(singleLocation);
                     }
@@ -284,7 +285,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void getDeviceLocation() {
-        Log.d(TAG, "getDeviceLocation:      entered ");
+        Timber.d("getDeviceLocation:      entered ");
         try {
             if (mLocationPermissionGranted) {
                 Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -303,12 +304,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+            Timber.e(e);
         }
     }
 
     private void addtodatabase() {
-        Log.d(TAG, "addtodatabase:   enteredd !!!  ");
+        Timber.d("addtodatabase:   enteredd !!!  ");
         final LatLng latLng=new LatLng(mLastKnownLocation.getLatitude(),
                 mLastKnownLocation.getLongitude());
         String address = getaddress(latLng.latitude , latLng.longitude);
@@ -333,7 +334,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 googleMap.addMarker(options);
 
             }catch (NullPointerException e){
-                Log.e(TAG, "moveCamera: NullPointerException: " + e.getMessage() );
+                Timber.e("moveCamera: NullPointerException: %s", e.getMessage());
             }
         }else{
             String snippet = "\n"+"user: "+userName +
@@ -394,7 +395,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getLocationPermission();
             }
         } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+            Timber.e(e);
         }
     }
     public void settingsRequest2(final Activity activity) {
@@ -458,7 +459,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         super.onStart();
-        Log.d(TAG, "onStart: suru");
+        Timber.d("onStart: suru");
 
     }
 
@@ -486,7 +487,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: suru");
+        Timber.d("onResume: suru");
 
 
     }
@@ -522,7 +523,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Task<Void> addRating(String mUserID  , int factor) {
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        Log.d(TAG, "addRating:   function calledd !!!!");
+        Timber.d("addRating:   function calledd !!!!");
         final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
                 .document(mUserID);
         return firebaseFirestore.runTransaction(transaction -> {

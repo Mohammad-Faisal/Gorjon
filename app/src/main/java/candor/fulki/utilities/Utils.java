@@ -1,16 +1,5 @@
 package candor.fulki.utilities;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
-
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import candor.fulki.explore.people.Ratings;
-
 public class Utils {
 
 

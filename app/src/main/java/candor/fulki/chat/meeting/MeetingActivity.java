@@ -36,7 +36,8 @@ import java.util.List;
 import java.util.Map;
 
 import candor.fulki.chat.MessageAdapter;
-import candor.fulki.chat.Messages;
+import candor.fulki.models.MeetingRooms;
+import candor.fulki.models.Messages;
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
 import de.hdodenhof.circleimageview.CircleImageView;

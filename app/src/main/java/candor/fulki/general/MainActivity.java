@@ -4,13 +4,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
@@ -24,8 +27,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import candor.fulki.home.HomeActivity;
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 1;
-    private static final int RC_CHECK_PERMISSION_LOCATION = 2;
+
 
 
     public static String mUserID = "";
@@ -53,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String Id = "idKey";
     public static final String ThumbImage = "thumbKey";
     public static final String Image = "imageKey";
-
-    SharedPreferences sharedpreferences;
 
 
 
@@ -74,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
         getSupportActionBar().setElevation(1);
 
-
             mAuth = FirebaseAuth.getInstance();
             if(!isDataAvailable()){
                 Toast.makeText(this, "Please enable your data to continue", Toast.LENGTH_SHORT).show();
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
                         docRef.get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 DocumentSnapshot document = task.getResult();
+                                assert document != null;
                                 if (!document.exists()) {
                                     Intent regIntent = new Intent(MainActivity.this, ProfileSettingsActivity.class);
                                     startActivity(regIntent);
@@ -119,13 +123,24 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                     }else {
+
+
+
+                        List<IdpConfig> providers = Arrays.asList(
+                                new AuthUI.IdpConfig.PhoneBuilder().build(),
+                                new AuthUI.IdpConfig.FacebookBuilder().build()
+                        );
+
+                        /*List<IdpConfig> providers = Arrays.asList(
+                                new AuthUI.IdpConfig.PhoneBuilder().build()
+                        );*/
+
                         startActivityForResult(
                                 AuthUI.getInstance()
                                         .createSignInIntentBuilder()
-                                        .setIsSmartLockEnabled(false)
-                                        .setAvailableProviders(
-                                                Collections.singletonList(
-                                                        new Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build()))
+                                        .setAvailableProviders(providers)
+                                        .setLogo(R.drawable.fulki_logo)
+                                        .setTheme(R.style.AppTheme)
                                         .build(),
                                 RC_SIGN_IN);
                     }
@@ -154,14 +169,15 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_OK){
 
-
-
+                String accessToken = data.getDataString();
+                Timber.tag("Fulki").d("information of login   "+accessToken);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                mUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                mUserID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
                 DocumentReference docRef = db.collection("users").document(mUserID);
                 docRef.get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
+                        assert document != null;
                         if (!document.exists()) {
                             Intent regIntent = new Intent(MainActivity.this, ProfileSettingsActivity.class);
                             startActivity(regIntent);
@@ -173,10 +189,9 @@ public class MainActivity extends AppCompatActivity {
                             finish();
                         }
                     } else {
-                        Log.d(TAG, "get failed with ", task.getException());
+                        Timber.d(task.getException(), "get failed with ");
                     }
                 });
-
 
             }else{
                 Toast.makeText(this, "Failed for some reason please check your internet connnection ", Toast.LENGTH_SHORT).show();
@@ -184,6 +199,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
+
 
     @Override
     protected void onStart() {
@@ -195,15 +213,5 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         mAuth.removeAuthStateListener(mAuthStateListener);
     }
-    public void checkPermission(){
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                ){//Can add more as per requirement
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    RC_CHECK_PERMISSION_LOCATION);
-
-        }
-    }
 }

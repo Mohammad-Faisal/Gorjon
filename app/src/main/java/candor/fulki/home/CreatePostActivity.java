@@ -1,5 +1,6 @@
 package candor.fulki.home;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
@@ -16,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,9 +33,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Objects;
 
-import candor.fulki.explore.people.Ratings;
+import candor.fulki.general.Functions;
+import candor.fulki.models.Ratings;
 import candor.fulki.general.FileUtil;
 import candor.fulki.R;
 import candor.fulki.models.PostFiles;
@@ -82,14 +83,14 @@ public class CreatePostActivity extends AppCompatActivity {
         mCaption = findViewById(R.id.caption);
         mLocation = findViewById(R.id.location);
 
-        mUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mUserID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
 
     public void post(View view) throws IOException {
 
-        if(isDataAvailable()){
+        if(Functions.isDataAvailable(this)){
             if(postImageUriArrayList.size() > 0){
                 cnt = 0;
                 uploadImages();
@@ -142,7 +143,7 @@ public class CreatePostActivity extends AppCompatActivity {
             byte[] thumbByte  = getFileDataFromDrawable(compressedThumbFile);
 
 
-            long timestamp = 1* new Date().getTime();
+            long timestamp = new Date().getTime();
             String img = String.valueOf(timestamp);
 
 
@@ -155,29 +156,27 @@ public class CreatePostActivity extends AppCompatActivity {
             UploadTask uploadThumbTask = thumbFilePath.putBytes(thumbByte);
             UploadTask uploadImageTask = imageFilePath.putBytes(imageByte);
 
-
             uploadImageTask.addOnSuccessListener(taskSnapshot -> {
                 if(uploadImageTask.isSuccessful()){
-                    Uri downloadUrlThumb = taskSnapshot.getDownloadUrl();
-                    final String imageUrl  = downloadUrlThumb.toString();
-                    imageUrls.add(imageUrl);
-
-                    Log.d(TAG, "uploadImages:     main and thumb image uploading is succesful "+cnt);
-
-                    uploadThumbTask.addOnSuccessListener(taskSnapshot12 -> {
-                        if(uploadThumbTask.isSuccessful()){
-                            Uri downloadUrlThumb1 = taskSnapshot12.getDownloadUrl();
-                            final String thumbImageUrl  = downloadUrlThumb1.toString();
-                            thumbImageUrls.add(thumbImageUrl);
-
-                            cnt++;
-                            if(cnt ==  holder.getChildCount()-1){
-                                validatePost();
+                    imageFilePath.getDownloadUrl().addOnSuccessListener(uri -> {
+                        final String imageUrl  = uri.toString();
+                        imageUrls.add(imageUrl);
+                        Log.d(TAG, "uploadImages:     main and thumb image uploading is succesful "+cnt);
+                        uploadThumbTask.addOnSuccessListener(taskSnapshot12 -> {
+                            if(uploadThumbTask.isSuccessful()){
+                                thumbFilePath.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                                    String thumbImageUrl  = uri1.toString();
+                                    thumbImageUrls.add(thumbImageUrl);
+                                    cnt++;
+                                    if(cnt ==  holder.getChildCount()-1){
+                                        validatePost();
+                                    }
+                                });
+                            }else{
+                                Log.d(TAG, "uploadImages:    "+ taskSnapshot12.getError());
+                                Toast.makeText(CreatePostActivity.this, "Thumb Image Upload Failed !", Toast.LENGTH_SHORT).show();
                             }
-                        }else{
-                            Log.d(TAG, "uploadImages:    "+ taskSnapshot12.getError());
-                            Toast.makeText(CreatePostActivity.this, "Thumb Image Upload Failed !", Toast.LENGTH_SHORT).show();
-                        }
+                        });
                     });
                 }else{
                     Log.d(TAG, "uploadImages:    "+ taskSnapshot.getError());
@@ -201,7 +200,7 @@ public class CreatePostActivity extends AppCompatActivity {
             if(task.isSuccessful()){
                 Log.d(TAG, "uploadPost:     post upload succesfull ");
                 mProgress.dismiss();
-                addRating(mUserID , 15);
+                Functions.addRating(mUserID);
                 Toast.makeText(CreatePostActivity.this, "Success !", Toast.LENGTH_SHORT).show();
                 Intent mainIntent = new Intent(CreatePostActivity.this , HomeActivity.class);
                 startActivity(mainIntent);
@@ -233,10 +232,10 @@ public class CreatePostActivity extends AppCompatActivity {
         DocumentReference ref = FirebaseFirestore.getInstance().collection("posts").document();
         postPushId = ref.getId();
 
-        long timestamp = 1* new Date().getTime();
+        long timestamp = new Date().getTime();
 
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a MMM d, ''yy");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("h:mm a MMM d, ''yy");
         final String cur_time_and_date = sdf.format(c.getTime());
 
         HashMap< String , String > imageMap = new HashMap<>();
@@ -248,8 +247,8 @@ public class CreatePostActivity extends AppCompatActivity {
         }
 
 
-        postMap.put("primary_user_id" , FirebaseAuth.getInstance().getCurrentUser().getUid());
-        postMap.put("secondary_user_id" , FirebaseAuth.getInstance().getCurrentUser().getUid());
+        postMap.put("primary_user_id" , mUserID);
+        postMap.put("secondary_user_id" , mUserID);
 
         postMap.put("primary_push_id" , postPushId);
         postMap.put("secondary_push_id" , postPushId);
@@ -278,18 +277,6 @@ public class CreatePostActivity extends AppCompatActivity {
         }
     }
 
-    public static String random() {
-        int MAX_LENGTH = 100;
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(MAX_LENGTH);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
-    }
 
     public void addImage(View view) {
         Intent intent = new Intent();
@@ -311,6 +298,7 @@ public class CreatePostActivity extends AppCompatActivity {
                     Uri uri=data.getData();
                     Cursor cursor = getContentResolver().query(uri,
                             filePathColumn, null, null, null);
+                    assert cursor != null;
                     cursor.moveToFirst();
 
                     try {
@@ -379,6 +367,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
 
                             Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+                            assert cursor != null;
                             cursor.moveToFirst();
 
                             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -401,24 +390,19 @@ public class CreatePostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private boolean isDataAvailable() {
-        android.net.ConnectivityManager connectivityManager = (android.net.ConnectivityManager) getSystemService(android.content.Context.CONNECTIVITY_SERVICE);
-        android.net.NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
 
-    private Task<Void> addRating( String mUserID  , int factor) {
+    private void addRating(String mUserID) {
 
         Log.d(TAG, "addRating:    "+mUserID);
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
                 .document(mUserID);
-        return firebaseFirestore.runTransaction(transaction -> {
+        firebaseFirestore.runTransaction(transaction -> {
 
             Ratings ratings = transaction.get(ratingRef)
                     .toObject(Ratings.class);
             long curRating = ratings.getRating();
-            long nextRating = curRating + factor;
+            long nextRating = curRating + 15;
 
             ratings.setRating(nextRating);
             transaction.set(ratingRef, ratings);

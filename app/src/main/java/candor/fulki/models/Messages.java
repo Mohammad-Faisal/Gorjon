@@ -1,4 +1,4 @@
-package candor.fulki.chat;
+package candor.fulki.models;
 
 
 public class Messages {

@@ -37,8 +37,10 @@ import java.util.List;
 import candor.fulki.general.MainActivity;
 import candor.fulki.models.Comments;
 import candor.fulki.home.PostCommentAdapter;
-import candor.fulki.explore.people.Ratings;
-import candor.fulki.notification.Notifications;
+import candor.fulki.models.Ratings;
+import candor.fulki.models.Events;
+import candor.fulki.models.Joins;
+import candor.fulki.models.Notifications;
 import candor.fulki.profile.ShowPleopleListActivity;
 import candor.fulki.R;
 

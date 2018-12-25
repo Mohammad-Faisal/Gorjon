@@ -36,8 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import candor.fulki.chat.conversation.ChatBuddies;
+import candor.fulki.models.ChatBuddies;
 import candor.fulki.R;
+import candor.fulki.models.Messages;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
