@@ -13,12 +13,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -29,8 +35,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
+import candor.fulki.Fulki;
+import candor.fulki.R;
 import candor.fulki.models.Ratings;
 import candor.fulki.models.UserBasic;
+import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import timber.log.Timber;
 
@@ -133,6 +142,9 @@ public class Functions {
         });
         return userBasic;
     }
+    public static void createLog(String message){
+        Timber.tag("Fulki").d(message);
+    }
 
 
     public  static void printHashKey(Context context) {
@@ -150,6 +162,21 @@ public class Functions {
         } catch (Exception e) {
             Log.e("Fulki", "printHashKey()", e);
         }
+    }
+
+
+    public static void setUserImage(String imageURL, Context context ,  CircleImageView circleImageView){
+        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE)
+                .placeholder(R.drawable.ic_blank_profile).into(circleImageView, new Callback() {
+            @Override
+            public void onSuccess() {
+                //do nothing if an image is found offline
+            }
+            @Override
+            public void onError() {
+                Picasso.with(context).load(imageURL).placeholder(R.drawable.ic_blank_profile).into(circleImageView);
+            }
+        });
     }
 
 }

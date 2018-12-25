@@ -1,14 +1,14 @@
 package candor.fulki.profile;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -29,6 +30,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -63,6 +69,13 @@ public class RegistrationAccount extends AppCompatActivity {
    private byte[] thumb_byte;
 
 
+    String photo=null;
+    String name = null;
+    String email = null;
+    Bitmap userBitmap = null;
+
+
+    ProgressDialog mProgressDialog ; // = new ProgressDialog();
 
 
     @Override
@@ -72,6 +85,11 @@ public class RegistrationAccount extends AppCompatActivity {
 
 
         Objects.requireNonNull(getSupportActionBar()).setTitle("Create Your Account ");
+
+        mProgressDialog = new ProgressDialog(RegistrationAccount.this);
+        mProgressDialog.setTitle("Loading Data");
+        mProgressDialog.setMessage("Please wait for some time ....");
+        mProgressDialog.setIndeterminate(false);
 
 
         //widgets
@@ -87,6 +105,21 @@ public class RegistrationAccount extends AppCompatActivity {
 
 
 
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(firebaseUser!=null){
+            name  = firebaseUser.getDisplayName();
+            mRegName.setText(name);
+            if( firebaseUser.getPhotoUrl()!=null){
+                photo  = firebaseUser.getPhotoUrl().toString();
+                Timber.tag("Fulki").d("image url is    "+photo);
+                //getBitmapFromURL(photo);
+                photo = photo + "?height=480&width=480";
+                new DownloadImage().execute(photo);
+                //Functions.setUserImage(photo , this , mRegPhoto);
+
+            }
+            email = firebaseUser.getEmail();
+        }
 
 
         //firebase
@@ -108,15 +141,13 @@ public class RegistrationAccount extends AppCompatActivity {
 
 
 
-        mRegPhoto.setOnClickListener(v -> {
-            Functions.BringImagePicker(RegistrationAccount.this);
-        });
+        mRegPhoto.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccount.this));
+        mRegCamera.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccount.this));
 
-        mRegCamera.setOnClickListener(v -> checkPermissionStorage());
         mRegSave.setOnClickListener(v -> {
 
             //now saving the data to firestore
-            String name = mRegName.getText().toString();
+            name = mRegName.getText().toString();
             String userName = mRegUserName.getText().toString();
 
             if(imageUri==null){
@@ -132,8 +163,6 @@ public class RegistrationAccount extends AppCompatActivity {
                 Toast.makeText(RegistrationAccount.this, "User Name must be atleast 6 charactersr", Toast.LENGTH_SHORT).show();
             } else{
 
-
-
                 mProgress = new ProgressDialog(RegistrationAccount.this);
                 mProgress.setTitle("Saving Data.......");
                 mProgress.setMessage("please wait while we create your account");
@@ -147,8 +176,6 @@ public class RegistrationAccount extends AppCompatActivity {
                             Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
                             assert downloadUrlImage != null;
                             mainImageUrl =  downloadUrlImage.toString();
-
-
                             //uploading the thumb image
                             UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
                             uploadThumbTask.addOnFailureListener(exception -> {
@@ -230,6 +257,65 @@ public class RegistrationAccount extends AppCompatActivity {
     }
 
 
+    // DownloadImage AsyncTask
+    private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Create a progressdialog
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... URL) {
+
+            String imageURL = URL[0];
+
+            Bitmap bitmap = null;
+            try {
+                // Download Image from URL
+                InputStream input = new java.net.URL(imageURL).openStream();
+                // Decode Bitmap
+                bitmap = BitmapFactory.decodeStream(input);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            // Set the bitmap into ImageView
+            mRegPhoto.setImageBitmap(result);
+            try {
+                imageUri = getImageUri(RegistrationAccount.this , result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mProgressDialog.dismiss();
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) throws IOException {
+        File tempDir= Environment.getExternalStorageDirectory();
+        tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
+        tempDir.mkdir();
+        File tempFile = File.createTempFile("title", ".jpg", tempDir);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        byte[] bitmapData = bytes.toByteArray();
+
+        //write the bytes in file
+        FileOutputStream fos = new FileOutputStream(tempFile);
+        fos.write(bitmapData);
+        fos.flush();
+        fos.close();
+        return Uri.fromFile(tempFile);
+    }
+
+
+
     private TextWatcher filterTextWatcher = new TextWatcher() {
 
         @SuppressLint("SetTextI18n")
@@ -242,6 +328,7 @@ public class RegistrationAccount extends AppCompatActivity {
                     if(e==null){
                         int done = 0;
 
+                        assert documentSnapshots != null;
                         for(DocumentSnapshot doc : documentSnapshots){
                             String user_name = doc.getString("user_name");
                             Timber.d("now user name is   %s", user_name);
@@ -296,18 +383,4 @@ public class RegistrationAccount extends AppCompatActivity {
         }
     }
 
-    public void checkPermissionStorage() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(RegistrationAccount.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(RegistrationAccount.this, "Permission granted ....  try now", Toast.LENGTH_LONG).show();
-                ActivityCompat.requestPermissions(RegistrationAccount.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-
-            } else {
-                Functions.BringImagePicker(RegistrationAccount.this);
-            }
-        }
-        else{
-            Functions.BringImagePicker(RegistrationAccount.this);
-        }
-    }
 }

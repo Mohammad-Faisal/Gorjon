@@ -86,6 +86,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 .build();
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
+
     }
 
 

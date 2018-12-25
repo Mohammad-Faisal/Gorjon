@@ -35,8 +35,12 @@ import android.widget.Toast;
 
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.LoggingBehavior;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -118,7 +122,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
     AlertDialog districtAlertDialog;
     private ArrayList<String> mStringList;
     private static final String[] districts={
-             "Barguna" , "Barisal" , "Bhola",    "Jhalokati",  "Patuakhali", "Pirojpur",
+            "Barguna" , "Barisal" , "Bhola",    "Jhalokati",  "Patuakhali", "Pirojpur",
             "Bandarban","Brahmanbaria",   "Chandpur", "Chittagong", "Comilla",    "Cox's Bazar","Feni",     "Khagrachhari","Lakshmipur", "Noakhali", "Rangamati",
             "Dhaka",    "Faridpur" , "Gazipur",  "Gopalganj",  "Kishoreganj","Madaripur",  "Manikganj","Munshiganj",  "Narayanganj","Narsingdi","Rajbari","Shariatpur","Tangail",
             "Bagerhat", "Chuadanga",      "Jessore",  "Jhenaidah",  "Khulna",     "Kushtia",    "Magura",   "Meherpur",    "Narail",     "Satkhira",
@@ -143,6 +147,9 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         initButtons();
         initDistrictData();
         setupSpinner();
+
+
+        getFacebookUserInfo();
 
 
 
@@ -391,21 +398,43 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
     }
 
 
-    /*GraphRequest request = GraphRequest.newMeRequest(
-            accessToken,
-            new GraphRequest.GraphJSONObjectCallback() {
-                @Override
-                public void onCompleted(
-                        JSONObject object,
-                        GraphResponse response) {
+    private void getFacebookUserInfo(){
+
+        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+        //AccessToken accessToken =Session.getActiveSession().getAccessToken().getToken()
+        AccessToken token = AccessToken.getCurrentAccessToken();
+        Timber.tag("Fulki").d("information of accessToken   %s", token);
+        GraphRequest request = GraphRequest.newMeRequest(
+                token,
+                (object, response1) -> {
                     // Application code
+                    //Functions.createLog(object.toString());
+                    Timber.tag("Fulki").d("the response is    %s", response1.getRawResponse());
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,link,gender,hometown,profile_pic,location");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+
+
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/{person-id}/",
+                parameters,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        Timber.tag("Fulki").d("the response is    %s", response.getRawResponse());
+                    }
                 }
-            });
-    Bundle parameters = new Bundle();
-    parameters.putString("fields", "id,name,link");
-    request.setParameters(parameters);
-    request.executeAsync();
-*/
+        ).executeAsync();
+
+
+    }
+
+
     private void upload(){
 
         mProgress = new ProgressDialog(ProfileSettingsActivity.this);

@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.jakewharton.picasso.OkHttp3Downloader;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.picasso.Picasso;
@@ -34,6 +35,10 @@ public class Fulki extends MultiDexApplication {
 
     String mUserID;
 
+    ImageLoader imageLoader;
+    DisplayImageOptions postImageOptions;
+    DisplayImageOptions userImageOptions;
+
 
     @Override
     public void onCreate() {
@@ -42,7 +47,9 @@ public class Fulki extends MultiDexApplication {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Fabric.with(this, new Crashlytics());
 
-        //initImageLoader(this);
+        //initImageLoader();
+
+
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(this);
         ImageLoader.getInstance().init(universalImageLoader.getConfig());
 
@@ -68,20 +75,29 @@ public class Fulki extends MultiDexApplication {
         } catch (IllegalStateException ignored) {
         }
 
+
+
+
     }
 
-    public static void initImageLoader(Context context) {
+    public void initImageLoader() {
 
-        // This configuration tuning is custom. You can tune every option, you may tune some of them,
-        // or you can create default configuration by the
-        //  ImageLoaderConfiguration.createDefault(this);
-        // method.
-        //
-        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
-        // config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
-
-        // Initialize ImageLoader with configuration.
-        ImageLoader.getInstance().init(config.build());
+        //Image loader initialization for offline feature
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .threadPoolSize(5)
+                .threadPriority(Thread.MIN_PRIORITY + 2)
+                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
+                .build();
+        userImageOptions = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_blank_profile)
+                .showImageForEmptyUri(R.drawable.ic_blank_profile)
+                .showImageOnFail(R.drawable.ic_blank_profile)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .build();
+        imageLoader = ImageLoader.getInstance();
+        imageLoader.init(config);
     }
 
 
