@@ -397,7 +397,6 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         return len <= 3;
     }
 
-
     private void getFacebookUserInfo(){
 
         FacebookSdk.setIsDebugEnabled(true);
@@ -430,8 +429,6 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
                     }
                 }
         ).executeAsync();
-
-
     }
 
 
@@ -692,9 +689,6 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
 
 
     public void categoryOnClick(View view){
-
-
-
         int id = view.getId();
         switch (id) {
             case R.id.settings_category_a:
@@ -978,9 +972,6 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
-
-
-
 
 
 }

@@ -200,7 +200,7 @@ public class CreatePostActivity extends AppCompatActivity {
             if(task.isSuccessful()){
                 Log.d(TAG, "uploadPost:     post upload succesfull ");
                 mProgress.dismiss();
-                Functions.addRating(mUserID);
+                Functions.addRating(mUserID , 5);
                 Toast.makeText(CreatePostActivity.this, "Success !", Toast.LENGTH_SHORT).show();
                 Intent mainIntent = new Intent(CreatePostActivity.this , HomeActivity.class);
                 startActivity(mainIntent);

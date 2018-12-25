@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +38,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -45,7 +51,7 @@ import candor.fulki.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
-public class RegistrationAccount extends AppCompatActivity {
+public class RegistrationAccount extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
     // widgets
@@ -78,6 +84,14 @@ public class RegistrationAccount extends AppCompatActivity {
     ProgressDialog mProgressDialog ; // = new ProgressDialog();
 
 
+    Spinner mDivisionSpinner;
+    Spinner mBloodSpinner;
+    List< String > mDivisionList = new ArrayList<>();
+    List < String > mBloodList = new ArrayList<>();
+
+    private String districtString  ="", divisionString = "" , bloodString = "" , birthDateString = "" , professionString = "" , contactString = "";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +118,9 @@ public class RegistrationAccount extends AppCompatActivity {
         mRegUserName.addTextChangedListener(filterTextWatcher);
 
 
+        setupSpinner();
+
+
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(firebaseUser!=null){
@@ -112,13 +129,9 @@ public class RegistrationAccount extends AppCompatActivity {
             if( firebaseUser.getPhotoUrl()!=null){
                 photo  = firebaseUser.getPhotoUrl().toString();
                 Timber.tag("Fulki").d("image url is    "+photo);
-                //getBitmapFromURL(photo);
                 photo = photo + "?height=480&width=480";
                 new DownloadImage().execute(photo);
-                //Functions.setUserImage(photo , this , mRegPhoto);
-
             }
-            email = firebaseUser.getEmail();
         }
 
 
@@ -127,133 +140,181 @@ public class RegistrationAccount extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         mUserID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
-        mRegMale.setOnClickListener(v -> {
-            mGender = 1; //male
-            mRegMale.setBackgroundResource(R.drawable.textview_selected);
-            mRegFemale.setBackgroundResource(R.drawable.textview_not_selected);
-        });
-
-        mRegFemale.setOnClickListener(v -> {
-            mGender = 0 ;//female
-            mRegMale.setBackgroundResource(R.drawable.textview_not_selected);
-            mRegFemale.setBackgroundResource(R.drawable.textview_selected);
-        });
-
-
 
         mRegPhoto.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccount.this));
         mRegCamera.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccount.this));
 
         mRegSave.setOnClickListener(v -> {
-
-            //now saving the data to firestore
             name = mRegName.getText().toString();
-            String userName = mRegUserName.getText().toString();
-
-            if(imageUri==null){
-                Toast.makeText(RegistrationAccount.this, "please select and image", Toast.LENGTH_SHORT).show();
-            }else if(name.equals("")){
-                Toast.makeText(RegistrationAccount.this, "please give us your name", Toast.LENGTH_SHORT).show();
-            }else if(userName.equals("")) {
-                Toast.makeText(RegistrationAccount.this, "please give us your user name", Toast.LENGTH_SHORT).show();
-            }else if(mGender==2){
-                Toast.makeText(RegistrationAccount.this, "Please Select your gender", Toast.LENGTH_SHORT).show();
-            }else if(userName.length()<6){
-                mRegUserName.setError("username not specified !");
-                Toast.makeText(RegistrationAccount.this, "User Name must be atleast 6 charactersr", Toast.LENGTH_SHORT).show();
-            } else{
-
-                mProgress = new ProgressDialog(RegistrationAccount.this);
-                mProgress.setTitle("Saving Data.......");
-                mProgress.setMessage("please wait while we create your account");
-                mProgress.setCanceledOnTouchOutside(false);
-                mProgress.show();
-
-
-                //uploading the main image
-                imageFilePath.putFile(imageUri)
-                        .addOnSuccessListener(taskSnapshot -> {
-                            Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
-                            assert downloadUrlImage != null;
-                            mainImageUrl =  downloadUrlImage.toString();
-                            //uploading the thumb image
-                            UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
-                            uploadThumbTask.addOnFailureListener(exception -> {
-                                Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
-                                Timber.tag("Thumb  Photo Upload:  ").w(exception);
-                            }).addOnSuccessListener(taskSnapshot1 -> {
-                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                                Uri downloadUrlThumb = taskSnapshot1.getUploadSessionUri();
-                                assert downloadUrlThumb != null;
-                                thumbImageUrl  = downloadUrlThumb.toString();
-
-                                //now saving the data to firestore
-                                String name1 = mRegName.getText().toString();
-                                String userName1 = mRegUserName.getText().toString();
-                                String gender1 = "others";
-
-
-                                if(mGender==1){
-                                    gender1 = "male";
-                                }else if(mGender==0){
-                                    gender1 = "female";
-                                }
-
-
-                                String deviceTokenID = FirebaseInstanceId.getInstance().getToken();
-                                Map < String, Object> userMap = new HashMap<>();
-
-                                userMap.put("name" , name1);
-                                userMap.put("user_name" , userName1);
-                                userMap.put("user_id" , mUserID);
-                                userMap.put("gender" , gender1);
-                                userMap.put("image" , mainImageUrl);
-                                userMap.put("thumb_image",thumbImageUrl);
-                                userMap.put("bio" , "");
-                                userMap.put("division", "Select One");
-                                userMap.put("blood_group", "Select One");
-                                userMap.put("birth_date" , "");
-                                userMap.put("contact_no" , "");
-                                userMap.put("email" , "");
-                                userMap.put("timestamp" , "");
-                                userMap.put("district" , "");
-                                userMap.put("lat" , 0);
-                                userMap.put("lng" , 0);
-                                userMap.put("rating" , 0);
-                                userMap.put("device_id" , deviceTokenID);
-
-                                Map< String, Object> rating = new HashMap<>();
-                                rating.put("rating" , 0);
-                                rating.put("user_name" , userName1);
-                                rating.put("user_id" , mUserID);
-                                rating.put("thumb_image" , thumbImageUrl);
-                                firebaseFirestore.collection("ratings").document(mUserID).set(rating);
-
-
-                                firebaseFirestore.collection("users").document(mUserID).set(userMap).addOnCompleteListener(task -> {
-                                    if(task.isSuccessful()){
-
-                                        Intent mainIntent = new Intent(RegistrationAccount.this, MainActivity.class);
-                                        startActivity(mainIntent);
-                                        mProgress.dismiss();
-                                        finish();
-
-                                    }else{
-                                        mProgress.dismiss();
-                                        String error = Objects.requireNonNull(task.getException()).getMessage();
-                                        Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
-                                        Timber.d("onComplete: %s", error);
-                                    }
-                                });
-                            });
-                        })
-                        .addOnFailureListener(exception -> {
-                            mProgress.dismiss();
-                            Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
-                            Timber.tag("Main Photo Upload   :  ").w(exception);
-                        });
+            if(validateData()){
+                uploadImageThenDetails();
             }
         });
+    }
+
+
+    private void uploadImageThenDetails(){
+        mProgress = new ProgressDialog(RegistrationAccount.this);
+        mProgress.setTitle("Saving Data.......");
+        mProgress.setMessage("please wait while we create your account");
+        mProgress.setCanceledOnTouchOutside(false);
+        mProgress.show();
+
+
+
+        imageFilePath.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
+                    mainImageUrl =  downloadUrlImage.toString();
+                    UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
+                    uploadThumbTask.addOnFailureListener(exception -> {
+                        mProgress.dismiss();
+                        Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
+                        Timber.tag("Thumb  Photo Upload:  ").w(exception);
+                    }).addOnSuccessListener(taskSnapshot1 -> {
+                        Uri downloadUrlThumb = taskSnapshot1.getUploadSessionUri();
+                        assert downloadUrlThumb != null;
+                        thumbImageUrl  = downloadUrlThumb.toString();
+                        Timber.d("uploadImage:    is succesfull ");
+                        mProgress.dismiss();
+                        uploadUserDetails();
+                    });
+                })
+                .addOnFailureListener(exception -> {
+                    Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
+                    Timber.tag("Main Photo Upload   :  ").w(exception);
+                });
+    }
+
+    private boolean validateData(){
+        if(imageUri==null){
+            Toast.makeText(RegistrationAccount.this, "please select your image", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(name.equals("")){
+            Toast.makeText(RegistrationAccount.this, "please give us your name", Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(mGender==2){
+            Toast.makeText(RegistrationAccount.this, "Please Select your gender", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
+    private void uploadUserDetails(){
+
+        Map < String, Object> userMap = getUserMap();
+        Map< String, Object> rating = new HashMap<>();
+        rating.put("rating" , 0);
+        rating.put("user_name" , name);
+        rating.put("user_id" , mUserID);
+        rating.put("thumb_image" , thumbImageUrl);
+        firebaseFirestore.collection("ratings").document(mUserID).set(rating);
+
+        firebaseFirestore.collection("users").document(mUserID).set(userMap).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Intent mainIntent = new Intent(RegistrationAccount.this, MainActivity.class);
+                startActivity(mainIntent);
+                mProgress.dismiss();
+                finish();
+
+            }else{
+                mProgress.dismiss();
+                String error = Objects.requireNonNull(task.getException()).getMessage();
+                Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
+                Timber.d("onComplete: %s", error);
+            }
+        });
+    }
+
+    private Map < String, Object> getUserMap(){
+        String deviceTokenID = FirebaseInstanceId.getInstance().getToken();
+        Map < String, Object> userMap = new HashMap<>();
+
+        String name = mRegName.getText().toString();
+        String userName = mRegUserName.getText().toString();
+        String gender = "others";
+
+        if(mGender==1){
+            gender = "male";
+        }else if(mGender==0){
+            gender = "female";
+        }
+
+        userMap.put("name" , name);
+        userMap.put("user_name" , "");
+        userMap.put("user_id" , mUserID);
+        userMap.put("gender" , gender);
+        userMap.put("image" , mainImageUrl);
+        userMap.put("thumb_image",thumbImageUrl);
+        userMap.put("bio" , "");
+        userMap.put("division", divisionString);
+        userMap.put("blood_group",bloodString);
+        userMap.put("birth_date" , "");
+        userMap.put("contact_no" , "");
+        userMap.put("email" , "");
+        userMap.put("timestamp" , "");
+        userMap.put("district" , "");
+        userMap.put("lat" , 0);
+        userMap.put("lng" , 0);
+        userMap.put("rating" , 0);
+        userMap.put("device_id" , deviceTokenID);
+        return userMap;
+    }
+
+    private void setupSpinner(){
+
+
+        String[] myResArray = getResources().getStringArray(R.array.divisions_array);
+        mDivisionList = Arrays.asList(myResArray);
+
+        myResArray = getResources().getStringArray(R.array.blood_array);
+        mBloodList = Arrays.asList(myResArray);
+
+
+        //adapter for spinner we changed the view by using layout given bellow
+        mDivisionSpinner =  findViewById(R.id.settings_division_spinner);
+        ArrayAdapter<CharSequence> mDivisionAdapter = ArrayAdapter.createFromResource(this,
+                R.array.divisions_array, R.layout.spinner_layout);
+        mDivisionAdapter.setDropDownViewResource(R.layout.spinner_layout);
+        mDivisionSpinner.setAdapter(mDivisionAdapter);
+        mDivisionSpinner.setAdapter(mDivisionAdapter);
+        mDivisionSpinner.setOnItemSelectedListener(this);
+
+
+        mBloodSpinner = findViewById(R.id.settings_blood_spinner);
+        ArrayAdapter<CharSequence> mBloodAdapter = ArrayAdapter.createFromResource(this,
+                R.array.blood_array, R.layout.spinner_layout);
+        mBloodAdapter.setDropDownViewResource(R.layout.spinner_layout);
+        mBloodSpinner.setAdapter(mBloodAdapter);
+        mBloodSpinner.setAdapter(mBloodAdapter);
+        mBloodSpinner.setOnItemSelectedListener(this);
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        switch(parent.getId()){
+            case R.id.settings_division_spinner:
+                divisionString =  mDivisionSpinner.getSelectedItem().toString();
+                break;
+            case R.id.settings_blood_spinner:
+                bloodString= mBloodSpinner.getSelectedItem().toString();
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public void handleMaleClick(View view) {
+        mGender = 1; //male
+        mRegMale.setBackgroundResource(R.drawable.textview_selected);
+        mRegFemale.setBackgroundResource(R.drawable.textview_not_selected);
+    }
+
+    public void handleFemaleClick(View view) {
+        mGender = 0 ;//female
+        mRegMale.setBackgroundResource(R.drawable.textview_not_selected);
+        mRegFemale.setBackgroundResource(R.drawable.textview_selected);
     }
 
 
@@ -313,8 +374,6 @@ public class RegistrationAccount extends AppCompatActivity {
         fos.close();
         return Uri.fromFile(tempFile);
     }
-
-
 
     private TextWatcher filterTextWatcher = new TextWatcher() {
 

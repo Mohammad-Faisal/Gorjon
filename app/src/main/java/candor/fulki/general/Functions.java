@@ -101,7 +101,7 @@ public class Functions {
     }
 
 
-    public static void addRating(String mUserID) {
+    public static void addRating(String mUserID , long rating) {
 
         Log.d("Functions", "addRating:    "+mUserID);
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -114,7 +114,7 @@ public class Functions {
 
             assert ratings != null;
             long curRating = ratings.getRating();
-            long nextRating = curRating + 15;
+            long nextRating = curRating + rating;
 
             ratings.setRating(nextRating);
             transaction.set(ratingRef, ratings);
