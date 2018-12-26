@@ -37,6 +37,8 @@ import candor.fulki.models.Ratings;
 import candor.fulki.models.UserBasic;
 import candor.fulki.models.Notifications;
 import candor.fulki.R;
+import candor.fulki.utils.Constants;
+import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -61,11 +63,11 @@ public class ListPeopleAdapter extends RecyclerView.Adapter<ListPeopleAdapter.Li
         this.context  = context;
         this.activity = activity;
 
-        SharedPreferences sp = context.getSharedPreferences(candor.fulki.general.Constants.SHARED_PREF_NAME, MODE_PRIVATE);
-        mUserID = sp.getString(candor.fulki.general.Constants.Id, null);
-        mUserName = sp.getString(candor.fulki.general.Constants.Name, null);
-        mUserImage = sp.getString(candor.fulki.general.Constants.Image, null);
-        mUserThumbImage = sp.getString(candor.fulki.general.Constants.ThumbImage, null);
+        PreferenceManager preferenceManager = new PreferenceManager(context);
+        mUserID = preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
+        mUserImage = preferenceManager.getUserImage();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
 
     }
 

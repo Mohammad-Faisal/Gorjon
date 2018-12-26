@@ -61,9 +61,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import candor.fulki.general.Functions;
 import candor.fulki.general.MainActivity;
 import candor.fulki.models.Ratings;
 import candor.fulki.profile.ProfileActivity;
+import candor.fulki.utils.PreferenceManager;
 import timber.log.Timber;
 
 
@@ -136,6 +138,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleApiClient googleApiClient;
     String address;
 
+    PreferenceManager preferenceManager;
+    private String mUserName, mUserThumbImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -152,7 +157,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             setvalue= findViewById(R.id.setvalue);
 
 
-            if(!isDataAvailable()){
+        preferenceManager = new PreferenceManager(this);
+        mUserID = preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
+
+            if(!Functions.isDataAvailable(this)){
                 Toast.makeText(this, "Please turn on data", Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -313,9 +323,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final LatLng latLng=new LatLng(mLastKnownLocation.getLatitude(),
                 mLastKnownLocation.getLongitude());
         String address = getaddress(latLng.latitude , latLng.longitude);
-        Locationdetail locationdetail = new Locationdetail(MainActivity.mUserName , mUserID, MainActivity.mUserThumbImage,latLng.latitude, latLng.longitude,address);
+        Locationdetail locationdetail = new Locationdetail(mUserName , mUserID, mUserThumbImage,latLng.latitude, latLng.longitude,address);
         FirebaseFirestore.getInstance().collection("locations").document(mUserID).set(locationdetail);
-        addmarkertodata( MainActivity.mUserName  ,mUserID, MainActivity.mUserThumbImage , latLng , address);
+        addmarkertodata( mUserName  ,mUserID, mUserThumbImage , latLng , address);
     }
 
     private void addmarkertodata(String mUserName ,  String mUserID , String mUserThumbImage ,  LatLng latlng, String  placename) {
@@ -427,11 +437,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-    private boolean isDataAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
+
 
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();

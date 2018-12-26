@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:fontFamily="@font/averia_serif_libre_bold"
         android:gravity="center"
-        android:text="Women Empowerment"
+        android:text="Areas of Interest"
         android:textSize="20sp"
         android:textStyle="bold" />
     <ImageView

@@ -32,6 +32,7 @@ import java.io.IOException;
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
 import candor.fulki.models.MeetingRooms;
+import candor.fulki.utils.PreferenceManager;
 import id.zelory.compressor.Compressor;
 
 public class CreateMeetingActivity extends AppCompatActivity {
@@ -51,6 +52,7 @@ public class CreateMeetingActivity extends AppCompatActivity {
     //----------VARIABLES---------//
     private String title  , details , moderator , type , notification_id , tag , mUserID , mUserName , mMeetingId , mMeetingImageUrl;
     private Uri selectedImageUri;
+    PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +66,11 @@ public class CreateMeetingActivity extends AppCompatActivity {
         mCreateMeetingImage = findViewById(R.id.create_meeting_image);
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.GONE);
+        preferenceManager = new PreferenceManager(this);
 
         //--VARIABLES---//
-        mUserID = MainActivity.mUserID;
-        mUserName  = MainActivity.mUserName;
+        mUserID = preferenceManager.getUserId();
+        mUserName  = preferenceManager.getUserName();
         moderator = mUserName;
         type = "open";
         mMeetingImageUrl = "default";

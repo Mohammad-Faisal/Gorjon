@@ -291,7 +291,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         mRegCamera.setOnClickListener(v -> checkPermissionStorage());
         mRegSave.setOnClickListener(v -> {
             if(setData()){
-                if(!isDataAvailable()){
+                if(!Functions.isDataAvailable(this)){
                     Toast.makeText(this, "Please connect to internet ", Toast.LENGTH_SHORT).show();
                 }else{
                     if(isFirstTime){
@@ -515,14 +515,13 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         WriteBatch writeBatch  = firebaseFirestore.batch();
 
 
-        for(int i=0;i<myBloodArray.length;i++){
-            String blood = myBloodArray[i];
-            if(blood.equals(bloodString)){
+        for (String blood : myBloodArray) {
+            if (blood.equals(bloodString)) {
                 Timber.d("upload:   should be setting my blood in database %s", bloodString);
                 DocumentReference bloodRef = firebaseFirestore.collection(bloodString).document(mUserID);
-                writeBatch.set(bloodRef,categoryMap);
-            }else{
-                DocumentReference bloodRef = firebaseFirestore.collection(myBloodArray[i]).document(mUserID);
+                writeBatch.set(bloodRef, categoryMap);
+            } else {
+                DocumentReference bloodRef = firebaseFirestore.collection(blood).document(mUserID);
                 writeBatch.delete(bloodRef);
             }
         }
@@ -582,14 +581,6 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
     }
 
 
-    private boolean isDataAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        assert connectivityManager != null;
-        NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
-
-
     private void addRating(String mUserID  , int factor) {
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -618,10 +609,10 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         contactString = mContactNoText.getText().toString();
         professionString = mOccupationText.getText().toString();
 
-        MainActivity.mUserName = nameString;
+        /*MainActivity.mUserName = nameString;
         MainActivity.mUserThumbImage = thumbImageUrlString;
         MainActivity.mUserImage = mainImageUrlString;
-
+*/
         if(mGender==1){
             genderString = "male";
         }else if(mGender==0){
@@ -686,7 +677,6 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         Timber.d("getAllData:    now the data set is like   %s", userMap.toString());
         return userMap;
     }
-
 
     public void categoryOnClick(View view){
         int id = view.getId();

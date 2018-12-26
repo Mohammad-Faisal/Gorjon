@@ -42,6 +42,7 @@ import candor.fulki.home.HomeActivity;
 import candor.fulki.profile.ProfileSettingsActivity;
 import candor.fulki.R;
 import candor.fulki.profile.RegistrationAccount;
+import candor.fulki.utils.PreferenceManager;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+/*
     public static String mUserID = "";
     public static String mUserName = "";
     public static String mUserThumbImage = "";
@@ -65,12 +67,14 @@ public class MainActivity extends AppCompatActivity {
     public static final String ThumbImage = "thumbKey";
     public static final String Image = "imageKey";
 
+*/
 
+private String mUserID , mUserName , mUserThumbImage , mUserImage , mUserGender, mUserDivision , mUserDistrict , mUserBlood;
 
     //----------- FIREBASE -----//
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-
+    PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,85 +87,83 @@ public class MainActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
         getSupportActionBar().setElevation(1);
 
-            mAuth = FirebaseAuth.getInstance();
-            if(!isDataAvailable()){
-                Toast.makeText(this, "Please enable your data to continue", Toast.LENGTH_SHORT).show();
-            }else{
-                mAuthStateListener = firebaseAuth -> {
-                    final FirebaseUser mUser = firebaseAuth.getCurrentUser();
-                    if (mUser != null) {
-                        mUserID = mUser.getUid();
-
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        DocumentReference docRef = db.collection("users").document(mUserID);
-                        docRef.get().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                assert document != null;
-                                if (!document.exists()) {
-                                    //Intent regIntent = new Intent(MainActivity.this, ProfileSettingsActivity.class);
-                                    Intent regIntent = new Intent(MainActivity.this, RegistrationAccount.class);
-                                    startActivity(regIntent);
-                                    finish();
-                                }else{
 
 
-                                    SharedPreferences sp = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sp.edit();
-
-                                    editor.putString(Name, task.getResult().getString("name"));
-                                    editor.putString(Image, task.getResult().getString("image"));
-                                    editor.putString(ThumbImage, task.getResult().getString("thumb_image"));
-                                    editor.putString(Id, mUserID);
-                                    editor.apply();
+        preferenceManager = new PreferenceManager(this);
 
 
-                                    mUserName = task.getResult().getString("name");
-                                    mUserThumbImage = task.getResult().getString("thumb_image");
-                                    mUserImage = task.getResult().getString("image");
+        mAuth = FirebaseAuth.getInstance();
+        if(!Functions.isDataAvailable(this)){
+            //Toast.makeText(this, "Please enable your data to continue", Toast.LENGTH_SHORT).show();
 
-                                    Intent homeIntent = new Intent(MainActivity.this , HomeActivity.class);
-                                    startActivity(homeIntent);
-                                    finish();
-                                }
-                            } else {
-                                Timber.d(task.getException(), "get failed with ");
-                            }
-                        });
-                    }else {
+        }else{
 
 
-                        AuthUI.IdpConfig facebookIdp = new AuthUI.IdpConfig.FacebookBuilder()
-                                .setPermissions(Arrays.asList("user_friends" , "user_gender" ,
-                                        "user_hometown","user_birthday","email" ,"public_profile" ))
-                                .build();
+            final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (mUser != null) {
 
-                        List<IdpConfig> providers = Arrays.asList(
-                                new AuthUI.IdpConfig.PhoneBuilder().build(),
-                                facebookIdp
-                        );
+                mUserID = mUser.getUid();
 
-
-                        startActivityForResult(
-                                AuthUI.getInstance()
-                                        .createSignInIntentBuilder()
-                                        .setAvailableProviders(providers)
-                                        .setLogo(R.drawable.fulki_logo)
-                                        .setTheme(R.style.AppTheme)
-                                        .build(),
-                                RC_SIGN_IN);
+                DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(mUserID);
+                docRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        assert document != null;
+                        if (!document.exists()) {
+                            Intent regIntent = new Intent(MainActivity.this, RegistrationAccount.class);
+                            startActivity(regIntent);
+                            finish();
+                        }else{
+                            Intent homeIntent = new Intent(MainActivity.this , HomeActivity.class);
+                            startActivity(homeIntent);
+                            finish();
+                        }
+                    } else {
+                        Timber.d(task.getException(), "get failed with ");
                     }
-                };
+                });
+
+            }else {
+                startSignInFlow();
             }
 
+
+            /*mAuthStateListener = firebaseAuth -> {
+
+            };*/
         }
+    }
 
+    private void startSignInFlow(){
+        AuthUI.IdpConfig facebookIdp = new AuthUI.IdpConfig.FacebookBuilder()
+                .setPermissions(Arrays.asList("user_friends" , "user_gender" ,
+                        "user_hometown","user_birthday","email" ,"public_profile" ))
+                .build();
 
-    private boolean isDataAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        assert connectivityManager != null;
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
+        List<IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.PhoneBuilder().build(),
+                facebookIdp
+        );
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setLogo(R.drawable.fulki_logo)
+                        .setTheme(R.style.AppTheme)
+                        .build(),
+                RC_SIGN_IN);
+    }
+    private void saveToSharedPref(){
+
+        preferenceManager.setBirthDate("");
+        preferenceManager.setBlood(mUserBlood);
+        preferenceManager.setDivision(mUserDivision);
+        preferenceManager.setGender(mUserGender);
+        preferenceManager.setUserId(mUserID);
+        preferenceManager.setUserName(mUserName);
+        preferenceManager.setUserImage(mUserImage);
+        preferenceManager.setUserThumbImage(mUserThumbImage);
+        preferenceManager.setDistrict("");
     }
 
 
@@ -173,43 +175,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
         if (requestCode == RC_SIGN_IN) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            // Successfully signed in
             if (resultCode == RESULT_OK) {
-                String accessToken = data.getDataString();
-                Timber.tag("Fulki").d("information of login         %s", accessToken);
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-
-
-                String email  = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                String name  = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-                String phoneNumber  = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-                String photo  = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
-
-                Timber.tag("Fulki").d("information of email         %s", email);
-                Timber.tag("Fulki").d("information of name          %s", name);
-                Timber.tag("Fulki").d("information of phoneNumber   %s", phoneNumber);
-                Timber.tag("Fulki").d("information of photo         %s", photo);
-
-
-                mUserID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+                FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+                mUserID = Objects.requireNonNull(user).getUid();
                 DocumentReference docRef = db.collection("users").document(mUserID);
                 docRef.get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         assert document != null;
                         if (!document.exists()) {
-                            //Intent regIntent = new Intent(MainActivity.this, ProfileSettingsActivity.class);
                             Intent regIntent = new Intent(MainActivity.this, RegistrationAccount.class);
                             startActivity(regIntent);
                             finish();
                         }else{
+
+                            mUserName = task.getResult().getString("name");
+                            mUserThumbImage = task.getResult().getString("thumb_image");
+                            mUserImage = task.getResult().getString("image");
+                            mUserBlood = task.getResult().getString("blood_group");
+                            mUserDistrict = task.getResult().getString("district");
+                            mUserDivision = task.getResult().getString("division");
+                            mUserGender = task.getResult().getString("gender");
+                            mUserID = task.getResult().getString("user_id");
+
+                        //    FirebaseFirestore.getInstance().collection("device_ids").document(mUserID).fieldset(device_id);
+
+                            saveToSharedPref();
+
                             Intent homeIntent = new Intent(MainActivity.this , HomeActivity.class);
                             startActivity(homeIntent);
                             finish();
@@ -243,12 +238,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthStateListener);
+        //mAuth.addAuthStateListener(mAuthStateListener);
     }
     @Override
     protected void onStop() {
         super.onStop();
-        mAuth.removeAuthStateListener(mAuthStateListener);
+        //mAuth.removeAuthStateListener(mAuthStateListener);
     }
 
 }

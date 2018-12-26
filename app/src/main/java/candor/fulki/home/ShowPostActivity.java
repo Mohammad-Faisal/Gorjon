@@ -37,6 +37,8 @@ import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
 import candor.fulki.profile.ShowPleopleListActivity;
 import candor.fulki.R;
+import candor.fulki.utils.Constants;
+import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -437,10 +439,10 @@ public class ShowPostActivity extends AppCompatActivity implements BaseSliderVie
     }
 
     private void loadDetails(){
-        android.content.SharedPreferences sp = getSharedPreferences(candor.fulki.general.Constants.SHARED_PREF_NAME, MODE_PRIVATE);
-        mUserID = sp.getString(candor.fulki.general.Constants.Id, null);
-        mUserName = sp.getString(candor.fulki.general.Constants.Name, null);
-        mUserThumbImage = sp.getString(candor.fulki.general.Constants.ThumbImage, null);
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        mUserID = preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
     }
 
 

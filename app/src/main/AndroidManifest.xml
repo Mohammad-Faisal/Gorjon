@@ -13,8 +13,10 @@
 
 
 
-    <application
 
+
+    <application
+        android:grantUriPermissions="true"
         android:name=".Fulki"
         android:allowBackup="true"
         android:icon="@drawable/fulki_logo"
@@ -35,6 +37,7 @@
 
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <activity
+
             android:name=".profile.RegistrationAccount"
             android:screenOrientation="portrait" />
         <activity

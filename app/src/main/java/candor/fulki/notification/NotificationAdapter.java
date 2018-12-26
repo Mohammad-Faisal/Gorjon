@@ -35,13 +35,13 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
-import candor.fulki.general.GetTimeAgo;
-import candor.fulki.general.MainActivity;
+import candor.fulki.utils.GetTimeAgo;
 import candor.fulki.models.Ratings;
 import candor.fulki.home.ShowPostActivity;
 import candor.fulki.models.Notifications;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.R;
+import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -53,22 +53,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private static final String TAG = "NotificationAdapter";
     private List<Notifications> mNotificationList;
     private List<String> mNotificationIDs;
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    Context context;
-    Activity activity;
+    private DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    private Context context;
+    private Activity activity;
 
     public ImageLoader imageLoader;
     public DisplayImageOptions postImageOptions;
     public DisplayImageOptions userImageOptions;
-    private String mUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private String mUserID  , mUserName , mUserThumbImage;
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+    private PreferenceManager preferenceManager;
 
     // ---- CONSTRUCTOR --//
     public NotificationAdapter(List<Notifications> mNotificationList , List<String> mNotificationIDs, Context context , Activity activity){
         this.mNotificationList = mNotificationList;
+        this.mNotificationIDs = mNotificationIDs;
         this.context = context;
         this.activity  = activity;
-        this.mNotificationIDs = mNotificationIDs;
+        preferenceManager = new PreferenceManager(context);
+        mUserID = preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
 
         //Image loader initialization for offline feature
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
@@ -163,7 +169,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 profileIntent.putExtra("userID" , userID);
                 context.startActivity(profileIntent);
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.White));
-                mRootRef.child("notifications").child(MainActivity.mUserID).child(notiID).child("seen").setValue("y").addOnSuccessListener(new OnSuccessListener<Void>() {
+                mRootRef.child("notifications").child(mUserID).child(notiID).child("seen").setValue("y").addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                     }

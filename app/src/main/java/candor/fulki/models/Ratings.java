@@ -6,6 +6,7 @@ public class Ratings {
     private String user_id;
     private String thumb_image;
     private long  rating;
+    private long time_stamp;
 
     public String getUser_name() {
         return user_name;
@@ -44,7 +45,6 @@ public class Ratings {
     }
 
     public Ratings(String user_name, String user_id, String thumb_image, long rating) {
-
         this.user_name = user_name;
         this.user_id = user_id;
         this.thumb_image = thumb_image;

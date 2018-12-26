@@ -1,15 +1,25 @@
 package candor.fulki.profile;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +27,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,38 +40,53 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.LoginStatusCallback;
+import com.facebook.login.LoginManager;
+import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 import candor.fulki.adapters.CategoriesAdapter;
 import candor.fulki.general.Functions;
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
-import candor.fulki.home.CombinedHomeAdapter;
-import candor.fulki.home.CombinedPosts;
+
+import candor.fulki.home.HomeActivity;
 import candor.fulki.models.Categories;
+import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -70,6 +98,7 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
     private CircleImageView mRegPhoto;
     private ProgressDialog mProgress;
     private EditText mRegName , mRegUserName;
+    Button mRegSave ,mRegCamera;
 
     //variables
     private int mGender = 2;
@@ -101,11 +130,13 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
     List < String > mBloodList = new ArrayList<>();
 
     private String districtString  ="", divisionString = "" , bloodString = "" , birthDateString = "" , professionString = "" , contactString = "";
-
+    private String genderString = "others";
 
     RecyclerView mRegCategoryRecycler;
     private CategoriesAdapter mCategoriesAdapter;
     private List<Categories> categoriesList;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,29 +146,11 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
         Objects.requireNonNull(getSupportActionBar()).setTitle("Create Your Account ");
 
-        mProgressDialog = new ProgressDialog(RegistrationAccount.this);
-        mProgressDialog.setTitle("Loading Data");
-        mProgressDialog.setMessage("Please wait for some time ....");
-        mProgressDialog.setIndeterminate(false);
 
-
-        //widgets
-        mRegName = findViewById(R.id.reg_name);
-        mRegUserName = findViewById(R.id.reg_user_name);
-        Button mRegCamera = findViewById(R.id.reg_camera);
-        Button mRegSave = findViewById(R.id.reg_save);
-        mRegPhoto = findViewById(R.id.reg_photo);
-        mRegMale =findViewById(R.id.reg_male);
-        mRegFemale =findViewById(R.id.reg_female);
-        mRegError = findViewById(R.id.reg_error);
-        mRegUserName.addTextChangedListener(filterTextWatcher);
-        mRegCategoryRecycler = findViewById(R.id.category_recycler);
-
-
-
+        initViews();
         setupSpinner();
-
-
+        loadCategories();
+        getFacebookDetails();
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if(firebaseUser!=null){
@@ -160,19 +173,12 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
         mRegPhoto.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccount.this));
         mRegCamera.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccount.this));
-
         mRegSave.setOnClickListener(v -> {
             name = mRegName.getText().toString();
             if(validateData()){
                 uploadImageThenDetails();
             }
         });
-
-
-
-
-        loadCategories();
-
 
 
     }
@@ -222,6 +228,7 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         imageFilePath.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
+                    assert downloadUrlImage != null;
                     mainImageUrl =  downloadUrlImage.toString();
                     UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
                     uploadThumbTask.addOnFailureListener(exception -> {
@@ -258,27 +265,60 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
     private void uploadUserDetails(){
 
+
         Map < String, Object> userMap = getUserMap();
+
+        //setting algolia search
+        Client client = new Client( "YWTL46QL1P" , "fcdc55274ed56d6fb92f51c0d0fc46a0" );
+        Index index = client.getIndex("users");
+        List<JSONObject> userList = new ArrayList<>();
+        userList.add(new JSONObject(userMap));
+        index.addObjectsAsync(new JSONArray(userList), null);
+
+
+
         Map< String, Object> rating = new HashMap<>();
         rating.put("rating" , 0);
         rating.put("user_name" , name);
         rating.put("user_id" , mUserID);
         rating.put("thumb_image" , thumbImageUrl);
-        firebaseFirestore.collection("ratings").document(mUserID).set(rating);
 
-        firebaseFirestore.collection("users").document(mUserID).set(userMap).addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
-                Intent mainIntent = new Intent(RegistrationAccount.this, MainActivity.class);
-                startActivity(mainIntent);
-                mProgress.dismiss();
-                finish();
 
-            }else{
-                mProgress.dismiss();
-                String error = Objects.requireNonNull(task.getException()).getMessage();
-                Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
-                Timber.d("onComplete: %s", error);
+
+        WriteBatch writeBatch  = firebaseFirestore.batch();
+
+
+        Map< String, String> odvut = new HashMap<>();
+        for(int i=0;i<categoriesList.size();i++){
+            String category = categoriesList.get(i).getName();
+            boolean selected = categoriesList.get(i).getSelected();
+            if(selected){
+                odvut.put(category , category);
             }
+        }
+
+        DocumentReference ratingRef = firebaseFirestore.collection("ratings").document(mUserID);
+        DocumentReference userRef = firebaseFirestore.collection("users").document(mUserID);
+        DocumentReference categoryRef = firebaseFirestore.collection("categories").document(mUserID);
+
+        writeBatch.set(ratingRef, rating);
+        writeBatch.set(userRef , userMap);
+        writeBatch.set(categoryRef,odvut);
+
+
+        saveToSharedPref();
+
+
+        writeBatch.commit().addOnSuccessListener(aVoid -> {
+            Intent homeIntent = new Intent(RegistrationAccount.this, MainActivity.class);
+            startActivity(homeIntent);
+            mProgress.dismiss();
+            finish();
+            Timber.d("first time data upload is successful");
+
+        }).addOnFailureListener(e -> {
+            mProgress.dismiss();
+            Timber.d("  aditional data upload not succesful");
         });
     }
 
@@ -287,19 +327,13 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         Map < String, Object> userMap = new HashMap<>();
 
         String name = mRegName.getText().toString();
-        String userName = mRegUserName.getText().toString();
-        String gender = "others";
+        genderString=  (mGender == 1 ) ? "male" : "female";
 
-        if(mGender==1){
-            gender = "male";
-        }else if(mGender==0){
-            gender = "female";
-        }
 
         userMap.put("name" , name);
         userMap.put("user_name" , "");
         userMap.put("user_id" , mUserID);
-        userMap.put("gender" , gender);
+        userMap.put("gender" , genderString);
         userMap.put("image" , mainImageUrl);
         userMap.put("thumb_image",thumbImageUrl);
         userMap.put("bio" , "");
@@ -307,14 +341,28 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         userMap.put("blood_group",bloodString);
         userMap.put("birth_date" , "");
         userMap.put("contact_no" , "");
-        userMap.put("email" , "");
-        userMap.put("timestamp" , "");
+        userMap.put("email" , email);
         userMap.put("district" , "");
         userMap.put("lat" , 0);
         userMap.put("lng" , 0);
         userMap.put("rating" , 0);
+        userMap.put("timestamp" , Functions.getTimeStamp());
         userMap.put("device_id" , deviceTokenID);
         return userMap;
+    }
+
+    private void saveToSharedPref(){
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        preferenceManager.setBirthDate("");
+        preferenceManager.setBlood(bloodString);
+        preferenceManager.setDivision(divisionString);
+        preferenceManager.setGender(genderString);
+        preferenceManager.setUserId(mUserID);
+        preferenceManager.setUserName(name);
+        preferenceManager.setUserImage(mainImageUrl);
+        preferenceManager.setUserThumbImage(thumbImageUrl);
+        preferenceManager.setDistrict("");
+        preferenceManager.setLoggedIn(true);
     }
 
     private void setupSpinner(){
@@ -387,14 +435,10 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
         @Override
         protected Bitmap doInBackground(String... URL) {
-
             String imageURL = URL[0];
-
             Bitmap bitmap = null;
             try {
-                // Download Image from URL
                 InputStream input = new java.net.URL(imageURL).openStream();
-                // Decode Bitmap
                 bitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -404,33 +448,93 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            // Set the bitmap into ImageView
             mRegPhoto.setImageBitmap(result);
-            try {
-                imageUri = getImageUri(RegistrationAccount.this , result);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            imageUri = Functions.bitmapToUriConverter(result, RegistrationAccount.this);
+            Timber.tag("Fulki").d("set Image bit map is succesful");
+            getImageUri(result);
             mProgressDialog.dismiss();
         }
     }
 
-    public Uri getImageUri(Context inContext, Bitmap inImage) throws IOException {
-        File tempDir= Environment.getExternalStorageDirectory();
-        tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
-        tempDir.mkdir();
-        File tempFile = File.createTempFile("title", ".jpg", tempDir);
+    private void getImageUri( Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        byte[] bitmapData = bytes.toByteArray();
+        String path = "";
 
-        //write the bytes in file
-        FileOutputStream fos = new FileOutputStream(tempFile);
-        fos.write(bitmapData);
-        fos.flush();
-        fos.close();
-        return Uri.fromFile(tempFile);
+        if(checkPermissionREAD_EXTERNAL_STORAGE(this)){
+            path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, "Title", "image");
+            imageUri =  Uri.parse(path);
+        }
+        Timber.tag("Fulki").d(path);
     }
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+
+    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
+            final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        (Activity) context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    showDialog("External storage", context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                } else {
+                    ActivityCompat.requestPermissions(
+                                    (Activity) context,
+                                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
+    public void showDialog(final String msg, final Context context,
+                           final String permission) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle("Permission necessary");
+        alertBuilder.setMessage(msg + " permission is necessary");
+        alertBuilder.setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        ActivityCompat.requestPermissions((Activity) context,
+                                new String[] { permission },
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
+                });
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // do your stuff
+                } else {
+                    Toast.makeText(this, "GET_ACCOUNTS Denied",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions,
+                        grantResults);
+        }
+    }
+
 
     private TextWatcher filterTextWatcher = new TextWatcher() {
 
@@ -496,6 +600,118 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
                 Exception error = result.getError();
                 Timber.tag("Registration  :  ").w(error);
             }
+        }
+    }
+
+    public void initViews(){
+        mProgressDialog = new ProgressDialog(RegistrationAccount.this);
+        mProgressDialog.setTitle("Loading Data");
+        mProgressDialog.setMessage("Please wait for some time ....");
+        mProgressDialog.setIndeterminate(false);
+
+
+        //widgets
+        mRegName = findViewById(R.id.reg_name);
+        mRegUserName = findViewById(R.id.reg_user_name);
+        mRegCamera = findViewById(R.id.reg_camera);
+        mRegSave = findViewById(R.id.reg_save);
+        mRegPhoto = findViewById(R.id.reg_photo);
+        mRegMale =findViewById(R.id.reg_male);
+        mRegFemale =findViewById(R.id.reg_female);
+        mRegError = findViewById(R.id.reg_error);
+        mRegUserName.addTextChangedListener(filterTextWatcher);
+        mRegCategoryRecycler = findViewById(R.id.category_recycler);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_registration, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_log_out:
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                Intent mainIntent = new Intent(RegistrationAccount.this, MainActivity.class);
+                startActivity(mainIntent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    private void getFacebookDetails(){
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+
+        if(isLoggedIn){
+            GraphRequest request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject object, GraphResponse response) {
+
+                    try {
+                        Timber.tag("Fulki").d(object.toString());
+                        if ( object.has( "first_name" ) )
+                        {
+                            String firstName = object.getString( "first_name" );
+                            Functions.createLog(firstName);
+                        }
+                        if ( object.has( "last_name" ) )
+                        {
+                            String lastName = object.getString( "last_name" );
+                            Functions.createLog(lastName);
+                        }
+                        if ( object.has( "email" ) )
+                        {
+                            email = object.getString( "email" );
+                            Functions.createLog(email);
+                        }
+                        if ( object.has( "birthday" ) )
+                        {
+                            String birthday = object.getString( "birthday" );
+                            Functions.createLog(birthday);
+                        }
+                        if ( object.has( "gender" ) )
+                        {
+                            String gender = object.getString( "gender" );
+                            Functions.createLog(gender);
+                        }
+                    }catch ( JSONException e )
+                    {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+            Bundle parameters = new Bundle();
+            parameters.putString( "fields", "id, first_name, last_name, email, birthday, gender" );
+            request.setParameters( parameters );
+            request.executeAsync();
         }
     }
 

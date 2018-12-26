@@ -40,6 +40,7 @@ import candor.fulki.models.MeetingRooms;
 import candor.fulki.models.Messages;
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
+import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MeetingActivity extends AppCompatActivity {
@@ -83,6 +84,7 @@ public class MeetingActivity extends AppCompatActivity {
     private String lastkey = "";
     private  String prevLastkey = "";
 
+    PreferenceManager preferenceManager;
 
 
     @Override
@@ -93,9 +95,10 @@ public class MeetingActivity extends AppCompatActivity {
 
         mMeetingID = getIntent().getStringExtra("meetingID");
 
+        preferenceManager = new PreferenceManager(this);
         //firebase
-        mUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mUserName = MainActivity.mUserName;
+        mUserID =preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mMessageReference = FirebaseDatabase.getInstance().getReference().child("meeting_messages");
 

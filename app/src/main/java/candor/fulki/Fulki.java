@@ -48,12 +48,8 @@ public class Fulki extends MultiDexApplication {
         Fabric.with(this, new Crashlytics());
 
         //initImageLoader();
-
-
         UniversalImageLoader universalImageLoader = new UniversalImageLoader(this);
         ImageLoader.getInstance().init(universalImageLoader.getConfig());
-
-
         //TImber
         if (BuildConfig.DEBUG) {
             Timber.uprootAll();
@@ -74,9 +70,6 @@ public class Fulki extends MultiDexApplication {
             Picasso.setSingletonInstance(picasso);
         } catch (IllegalStateException ignored) {
         }
-
-
-
 
     }
 

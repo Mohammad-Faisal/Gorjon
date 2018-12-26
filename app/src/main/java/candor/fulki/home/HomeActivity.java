@@ -31,15 +31,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import candor.fulki.adapters.CombinedHomeAdapter;
 import candor.fulki.chat.InboxActivity;
 import candor.fulki.explore.ExploreActivity;
 
 
 import candor.fulki.MapsActivity;
+import candor.fulki.general.Functions;
 import candor.fulki.notification.NotificationActivity;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.profile.ProfileSettingsActivity;
 import candor.fulki.R;
+import candor.fulki.utils.Constants;
+import candor.fulki.utils.PreferenceManager;
 import timber.log.Timber;
 
 
@@ -73,11 +77,13 @@ public class HomeActivity extends AppCompatActivity {
 
 
     private void loadDetails(){
-        android.content.SharedPreferences sp = getSharedPreferences(candor.fulki.general.Constants.SHARED_PREF_NAME, MODE_PRIVATE);
-        mUserID = sp.getString(candor.fulki.general.Constants.Id, null);
-        mUserName = sp.getString(candor.fulki.general.Constants.Name, null);
-        mUserImage = sp.getString(candor.fulki.general.Constants.Image, null);
-        mUserThumbImage = sp.getString(candor.fulki.general.Constants.ThumbImage, null);
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        mUserID = preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
+        mUserImage = preferenceManager.getUserImage();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
+        Timber.tag("Fulki").d(mUserThumbImage);
+        Functions.createLog(mUserThumbImage);
     }
 
     private void initRecycler(){
@@ -127,7 +133,7 @@ public class HomeActivity extends AppCompatActivity {
             String deviceTokenID = FirebaseInstanceId.getInstance().getToken();
             device_id.put("user_id" , mUserID);
             device_id.put("device_id" , deviceTokenID);
-            firebaseFirestore.collection("device_ids").document(mUserID).set(device_id);
+
 
 
 
@@ -136,8 +142,6 @@ public class HomeActivity extends AppCompatActivity {
 
             AsyncPostLoading runner = new AsyncPostLoading();
             runner.execute(1);
-
-
 
 
           recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

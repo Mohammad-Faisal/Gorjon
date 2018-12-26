@@ -6,7 +6,6 @@ package candor.fulki.models;
 
 public class Users {
 
-
     private String name;
     private String user_name;
     private String user_id;

@@ -1,4 +1,4 @@
-package candor.fulki.general;
+package candor.fulki.utils;
 
 import android.content.Context;
 

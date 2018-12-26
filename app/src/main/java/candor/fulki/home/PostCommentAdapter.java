@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +32,14 @@ import java.util.Objects;
 
 import candor.fulki.models.Ratings;
 import candor.fulki.general.Functions;
-import candor.fulki.general.GetTimeAgo;
+import candor.fulki.utils.GetTimeAgo;
 import candor.fulki.general.MainActivity;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.R;
+import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -59,6 +59,9 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
     boolean isLiked = false;
 
 
+    private String mUserName , mUserID, mUserThumbImage;
+    private PreferenceManager preferenceManager;
+
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -67,9 +70,10 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
         this.mCommentList = mCommentList;
         this.context = context;
         this.activity = activity;
-
-
-
+        preferenceManager = new PreferenceManager(context);
+        mUserID =preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
     }
 
     @NonNull
@@ -85,7 +89,6 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
         Comments c = mCommentList.get(position);
         holder.commentText.setText(c.getComment());
         final String mCurrentCommenterID = c.getUid();  //who has posted the comment
-        final String mUserID  = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();  //currently je logged in
         final String mCommentId  = c.getCommentId();
         final String mPostID = c.getPostID();
         final String mTimeStamp = c.getTime_stamp();
@@ -160,7 +163,7 @@ public class PostCommentAdapter extends RecyclerView.Adapter<PostCommentAdapter.
                 String time_stamp = String.valueOf(new Date().getTime());
                 DocumentReference ref = FirebaseFirestore.getInstance().collection("notifications/"+mCurrentCommenterID+"/notificatinos").document();
                 String likeNotificatoinPushID = ref.getId();
-                Likes mLikes = new Likes(mUserID , MainActivity.mUserName , MainActivity.mUserThumbImage ,likeNotificatoinPushID , time_stamp);
+                Likes mLikes = new Likes(mUserID , mUserName , mUserThumbImage ,likeNotificatoinPushID , time_stamp);
                 Notifications pushNoti = new Notifications( "comment_like" ,mUserID , mCurrentCommenterID, mPostID ,likeNotificatoinPushID , time_stamp,"n"  );
 
                 WriteBatch writeBatch = FirebaseFirestore.getInstance().batch();

@@ -42,7 +42,7 @@ import java.util.Map;
 import candor.fulki.chat.ChatActivity;
 import candor.fulki.chat.InboxActivity;
 import candor.fulki.explore.ExploreActivity;
-import candor.fulki.home.CombinedHomeAdapter;
+import candor.fulki.adapters.CombinedHomeAdapter;
 import candor.fulki.home.CombinedPosts;
 import candor.fulki.home.HomeActivity;
 import candor.fulki.models.Ratings;
@@ -51,6 +51,8 @@ import candor.fulki.notification.NotificationActivity;
 import candor.fulki.models.Notifications;
 import candor.fulki.R;
 import candor.fulki.search.SearchActivity;
+import candor.fulki.utils.Constants;
+import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -435,11 +437,11 @@ public class ProfileActivity extends AppCompatActivity {
     };
 
     private void loadDetails(){
-        SharedPreferences sp = getSharedPreferences(candor.fulki.general.Constants.SHARED_PREF_NAME, MODE_PRIVATE);
-        mUserID = sp.getString(candor.fulki.general.Constants.Id, null);
-        mUserName = sp.getString(candor.fulki.general.Constants.Name, null);
-        mUserImage = sp.getString(candor.fulki.general.Constants.Image, null);
-        mUserThumbImage = sp.getString(candor.fulki.general.Constants.ThumbImage, null);
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        mUserID = preferenceManager.getUserId();
+        mUserName = preferenceManager.getUserName();
+        mUserImage = preferenceManager.getUserImage();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
     }
 
     private void initBottomNav(){

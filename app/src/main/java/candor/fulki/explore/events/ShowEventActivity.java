@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import candor.fulki.general.MainActivity;
 import candor.fulki.models.Comments;
@@ -43,6 +44,7 @@ import candor.fulki.models.Joins;
 import candor.fulki.models.Notifications;
 import candor.fulki.profile.ShowPleopleListActivity;
 import candor.fulki.R;
+import candor.fulki.utils.PreferenceManager;
 
 public class ShowEventActivity extends AppCompatActivity {
 
@@ -62,19 +64,22 @@ public class ShowEventActivity extends AppCompatActivity {
     String moderatorID;
     long peopleCount;
     int joinState = 0;
-    String mUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    String mUserID ;
     String mUserName;
     String mUserImage;
     String mUserThumbImage;
+
+    PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_event);
         eventID = getIntent().getStringExtra("event_id");
-        Log.d(TAG, "onCreate:  eventID   :  "+eventID);
-        getSupportActionBar().setTitle("Event");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Event");
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        preferenceManager = new PreferenceManager(this);
 
         eventImage = findViewById(R.id.show_event_image);
         eventDate = findViewById(R.id.show_event_date);
@@ -89,22 +94,12 @@ public class ShowEventActivity extends AppCompatActivity {
         ownImage = findViewById(R.id.show_event_own_image);
 
 
-        firebaseFirestore.collection("users").document(mUserID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-                    mUserName = documentSnapshot.getString("name");
-                    mUserImage= documentSnapshot.getString("image");
-                    mUserThumbImage =documentSnapshot.getString("thumb_image");
-                    setImage(mUserThumbImage , ownImage);
-                }
-            }
-        }).addOnFailureListener(e -> {
-            mUserImage = MainActivity.mUserImage;
-            mUserName = MainActivity.mUserName;
-            mUserThumbImage = MainActivity.mUserThumbImage;
-            setImage(mUserThumbImage , ownImage);
-        });
+        mUserID = preferenceManager.getUserId();
+        mUserImage = preferenceManager.getUserImage();
+        mUserThumbImage = preferenceManager.getUserThumbImage();
+        mUserName = preferenceManager.getUserName();
+
+        setImage(mUserThumbImage , ownImage);
 
 
         LinearLayout mLinear = findViewById(R.id.event_people_list_linear);
