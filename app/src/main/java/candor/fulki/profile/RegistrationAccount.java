@@ -9,10 +9,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,8 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -45,9 +52,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import candor.fulki.adapters.CategoriesAdapter;
 import candor.fulki.general.Functions;
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
+import candor.fulki.home.CombinedHomeAdapter;
+import candor.fulki.home.CombinedPosts;
+import candor.fulki.models.Categories;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -92,6 +103,10 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
     private String districtString  ="", divisionString = "" , bloodString = "" , birthDateString = "" , professionString = "" , contactString = "";
 
 
+    RecyclerView mRegCategoryRecycler;
+    private CategoriesAdapter mCategoriesAdapter;
+    private List<Categories> categoriesList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +131,8 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         mRegFemale =findViewById(R.id.reg_female);
         mRegError = findViewById(R.id.reg_error);
         mRegUserName.addTextChangedListener(filterTextWatcher);
+        mRegCategoryRecycler = findViewById(R.id.category_recycler);
+
 
 
         setupSpinner();
@@ -150,8 +167,48 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
                 uploadImageThenDetails();
             }
         });
+
+
+
+
+        loadCategories();
+
+
+
     }
 
+    private void loadCategories(){
+        categoriesList = new ArrayList<>();
+        mCategoriesAdapter = new CategoriesAdapter(categoriesList,RegistrationAccount.this, RegistrationAccount.this);
+        mRegCategoryRecycler.setLayoutManager(new LinearLayoutManager(RegistrationAccount.this));
+        mRegCategoryRecycler.setAdapter(mCategoriesAdapter);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        DocumentReference docRef = firebaseFirestore.collection("categories").document("categories");
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                assert document != null;
+                if (document.exists()) {
+                    Timber.tag("Fulki").d("DocumentSnapshot data: %s", document.getData());
+                    List<String> categories = (List<String>) document.get("categories");
+
+                    assert categories != null;
+                    int len = categories.size();
+                    for(int i=0;i<len;i++){
+                        String category = categories.get(i);
+                        Categories temp= new Categories(category , false);
+                        categoriesList.add(temp);
+                    }
+                    mCategoriesAdapter.notifyDataSetChanged();
+                } else {
+                    Timber.tag("Fulki").d("No such document");
+                }
+            } else {
+                Timber.tag("Fulki").d(task.getException(), "get failed with ");
+            }
+        });
+    }
 
     private void uploadImageThenDetails(){
         mProgress = new ProgressDialog(RegistrationAccount.this);

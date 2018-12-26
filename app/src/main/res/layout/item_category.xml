@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/categoryLinear"
+    android:layout_height="wrap_content"
     >
 
 
     <TextView
-        android:onClick="categoryOnClick"
-        android:id="@+id/settings_category_c"
+        android:id="@+id/settings_category"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="50dp"
@@ -18,7 +18,7 @@
         android:textStyle="bold" />
     <ImageView
         android:visibility="gone"
-        android:id="@+id/image_tik_c"
+        android:id="@+id/image_tik"
         android:layout_gravity="center_vertical"
         android:layout_width="30dp"
         android:layout_height="30dp"

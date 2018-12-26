@@ -719,7 +719,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
                     mCategoryList.add("education");
                 }
                 break;
-            case R.id.settings_category_c:
+            /*case R.id.settings_category_c:
                 if(mCategorycc==1){
                     mImg_c.setVisibility(View.GONE);
                     mCategoryc.setBackgroundResource(R.drawable.textview_not_selected);
@@ -733,7 +733,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
                     mCategoryList.add("women_empowerment");
                 }
 
-                break;
+                break;*/
             case R.id.settings_category_d:
                 if(mCategorydd==1){
                     mImg_d.setVisibility(View.GONE);
@@ -822,13 +822,13 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
         mCategoryaa = mCategorybb = mCategorycc = mCategorydd = mCategoryee = 0;
         mCategorya = findViewById(R.id.settings_category_a);
         mCategoryb = findViewById(R.id.settings_category_b);
-        mCategoryc = findViewById(R.id.settings_category_c);
+        //mCategoryc = findViewById(R.id.settings_category_c);
         mCategoryd = findViewById(R.id.settings_category_d);
         mCategorye = findViewById(R.id.settings_category_e);
 
         mImg_a = findViewById(R.id.image_tik_a);
         mImg_b = findViewById(R.id.image_tik_b);
-        mImg_c = findViewById(R.id.image_tik_c);
+       // mImg_c = findViewById(R.id.image_tik_c);
         mImg_d = findViewById(R.id.image_tik_d);
         mImg_e = findViewById(R.id.image_tik_e);
 

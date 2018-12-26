@@ -48,6 +48,8 @@ public class ListPeopleAdapter extends RecyclerView.Adapter<ListPeopleAdapter.Li
     private List<UserBasic> mUserList;
     private Context context;
     private Activity activity;
+
+
     private boolean followState = false;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private String mUserName , mUserImage, mUserThumbImage;
