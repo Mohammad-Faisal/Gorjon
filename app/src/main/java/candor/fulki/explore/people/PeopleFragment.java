@@ -23,6 +23,7 @@ import java.util.List;
 import candor.fulki.profile.ListPeopleAdapter;
 import candor.fulki.models.UserBasic;
 import candor.fulki.R;
+import timber.log.Timber;
 
 
 public class PeopleFragment extends Fragment {
@@ -88,7 +89,7 @@ public class PeopleFragment extends Fragment {
 
 
 
-        Query nextQuery = firebaseFirestore.collection("users")
+        Query nextQuery = firebaseFirestore.collection("ratings")
                 .limit(30);
         nextQuery.addSnapshotListener(getActivity(), (documentSnapshots, e) -> {
             if(documentSnapshots!=null){
@@ -101,21 +102,16 @@ public class PeopleFragment extends Fragment {
 
                             UserBasic basic = new UserBasic();
                             basic.setmUserID(doc.getDocument().getString("user_id"));
-                            basic.setmUserName(doc.getDocument().getString("user_name"));
+                            basic.setmUserName(doc.getDocument().getString("name"));
                             basic.setmUserThumbImage(doc.getDocument().getString("thumb_image"));
-
-                            if(isFirstPageLoad){
-                                userList.add(basic);
-                            }else{
-                                userList.add(0,basic);
-                            }
+                            userList.add(basic);
                             mPeopleAdapter.notifyDataSetChanged();
                         }
                     }
                     isFirstPageLoad = false;
                 }
             }else{
-                Log.d(TAG, "onCreate:   document snapshot is null");
+                Timber.d("onCreate:   document snapshot is null");
             }
         });
 

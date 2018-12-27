@@ -38,11 +38,11 @@ import candor.fulki.explore.ExploreActivity;
 
 import candor.fulki.MapsActivity;
 import candor.fulki.general.Functions;
+import candor.fulki.models.CombinedPosts;
 import candor.fulki.notification.NotificationActivity;
 import candor.fulki.profile.ProfileActivity;
 import candor.fulki.profile.ProfileSettingsActivity;
 import candor.fulki.R;
-import candor.fulki.utils.Constants;
 import candor.fulki.utils.PreferenceManager;
 import timber.log.Timber;
 
@@ -64,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseFirestore firebaseFirestore;
     private CombinedHomeAdapter mCombinedHomeAdapter;
-    private List< CombinedPosts> combinedPosts;
+    private List<CombinedPosts> combinedPosts;
     LinearLayoutManager mLinearManager;
     private DocumentSnapshot lastVisible = null;
 
@@ -82,7 +82,8 @@ public class HomeActivity extends AppCompatActivity {
         mUserName = preferenceManager.getUserName();
         mUserImage = preferenceManager.getUserImage();
         mUserThumbImage = preferenceManager.getUserThumbImage();
-        Timber.tag("Fulki").d(mUserThumbImage);
+        Timber.tag("Fulki").d("from shared pref .... "+mUserThumbImage);
+        Timber.tag("Fulki").d("from shared pref .... "+mUserName);
         Functions.createLog(mUserThumbImage);
     }
 
@@ -301,9 +302,12 @@ public class HomeActivity extends AppCompatActivity {
     private void initBottomNavigation() {
         BottomNavigationViewEx mNavigation = findViewById(R.id.main_bottom_nav);
         mNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        mNavigation.enableAnimation(false);
+        mNavigation.enableAnimation(true);
+        mNavigation.enableShiftingMode(false);
+        mNavigation.enableItemShiftingMode(false);
         mNavigation.setIconSize(25, 25);
         mNavigation.setTextSize(7);
+
     }
 
 

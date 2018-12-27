@@ -2,7 +2,6 @@ package candor.fulki.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -38,12 +37,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import candor.fulki.chat.ChatActivity;
 import candor.fulki.chat.InboxActivity;
 import candor.fulki.explore.ExploreActivity;
 import candor.fulki.adapters.CombinedHomeAdapter;
-import candor.fulki.home.CombinedPosts;
+import candor.fulki.models.CombinedPosts;
 import candor.fulki.home.HomeActivity;
 import candor.fulki.models.Ratings;
 import candor.fulki.MapsActivity;
@@ -51,7 +51,6 @@ import candor.fulki.notification.NotificationActivity;
 import candor.fulki.models.Notifications;
 import candor.fulki.R;
 import candor.fulki.search.SearchActivity;
-import candor.fulki.utils.Constants;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -107,7 +106,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void setUpDetailsForCurrentUser(){
         FirebaseFirestore.getInstance().collection("users").document(mCurProfileId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if(task.getResult().exists()){
+                if(Objects.requireNonNull(task.getResult()).exists()){
                     mCurUserName = task.getResult().getString("name");
                     mCurUserImage = task.getResult().getString("image");
                     mCurUserTHumbImage = task.getResult().getString("thumb_image");

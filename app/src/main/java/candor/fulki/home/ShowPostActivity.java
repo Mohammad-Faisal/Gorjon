@@ -31,13 +31,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import candor.fulki.models.CombinedPosts;
 import candor.fulki.models.Ratings;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
 import candor.fulki.profile.ShowPleopleListActivity;
 import candor.fulki.R;
-import candor.fulki.utils.Constants;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;

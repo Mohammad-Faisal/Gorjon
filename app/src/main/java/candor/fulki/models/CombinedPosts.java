@@ -1,4 +1,4 @@
-package candor.fulki.home;
+package candor.fulki.models;
 
 import java.util.HashMap;
 

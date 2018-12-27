@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 
 import candor.fulki.general.Functions;
+import candor.fulki.models.CombinedPosts;
 import candor.fulki.models.Ratings;
 import candor.fulki.general.FileUtil;
 import candor.fulki.R;

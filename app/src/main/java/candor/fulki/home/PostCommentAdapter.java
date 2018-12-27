@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,12 +27,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
+import candor.fulki.models.CombinedPosts;
 import candor.fulki.models.Ratings;
 import candor.fulki.general.Functions;
 import candor.fulki.utils.GetTimeAgo;
-import candor.fulki.general.MainActivity;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;

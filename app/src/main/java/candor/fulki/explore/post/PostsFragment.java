@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import candor.fulki.adapters.CombinedHomeAdapter;
-import candor.fulki.home.CombinedPosts;
+import candor.fulki.models.CombinedPosts;
 import candor.fulki.R;
 
 public class PostsFragment extends Fragment {

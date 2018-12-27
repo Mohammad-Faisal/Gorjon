@@ -48,6 +48,8 @@ import com.facebook.GraphResponse;
 import com.facebook.LoginStatusCallback;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -66,6 +68,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,12 +81,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.function.Function;
 
 import candor.fulki.adapters.CategoriesAdapter;
 import candor.fulki.general.Functions;
 import candor.fulki.general.MainActivity;
 import candor.fulki.R;
 
+import candor.fulki.home.CreatePostActivity;
 import candor.fulki.home.HomeActivity;
 import candor.fulki.models.Categories;
 import candor.fulki.utils.PreferenceManager;
@@ -136,6 +141,8 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
     private CategoriesAdapter mCategoriesAdapter;
     private List<Categories> categoriesList;
 
+    private byte[] main_bytes;
+
 
 
     @Override
@@ -180,41 +187,8 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
             }
         });
 
-
     }
 
-    private void loadCategories(){
-        categoriesList = new ArrayList<>();
-        mCategoriesAdapter = new CategoriesAdapter(categoriesList,RegistrationAccount.this, RegistrationAccount.this);
-        mRegCategoryRecycler.setLayoutManager(new LinearLayoutManager(RegistrationAccount.this));
-        mRegCategoryRecycler.setAdapter(mCategoriesAdapter);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-
-        DocumentReference docRef = firebaseFirestore.collection("categories").document("categories");
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                assert document != null;
-                if (document.exists()) {
-                    Timber.tag("Fulki").d("DocumentSnapshot data: %s", document.getData());
-                    List<String> categories = (List<String>) document.get("categories");
-
-                    assert categories != null;
-                    int len = categories.size();
-                    for(int i=0;i<len;i++){
-                        String category = categories.get(i);
-                        Categories temp= new Categories(category , false);
-                        categoriesList.add(temp);
-                    }
-                    mCategoriesAdapter.notifyDataSetChanged();
-                } else {
-                    Timber.tag("Fulki").d("No such document");
-                }
-            } else {
-                Timber.tag("Fulki").d(task.getException(), "get failed with ");
-            }
-        });
-    }
 
     private void uploadImageThenDetails(){
         mProgress = new ProgressDialog(RegistrationAccount.this);
@@ -224,34 +198,38 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         mProgress.show();
 
 
+        //creating filepath for uploading the image
+        imageFilePath = mStorage.child("users").child(mUserID).child("Profile").child("profile_images").child(mUserID+".jpg");
+        thumbFilePath = mStorage.child("users").child(mUserID).child("Profile").child("thumb_images").child(mUserID+".jpg");
 
-        imageFilePath.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> {
-                    Uri downloadUrlImage = taskSnapshot.getUploadSessionUri();
-                    assert downloadUrlImage != null;
-                    mainImageUrl =  downloadUrlImage.toString();
-                    UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
-                    uploadThumbTask.addOnFailureListener(exception -> {
-                        mProgress.dismiss();
-                        Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
-                        Timber.tag("Thumb  Photo Upload:  ").w(exception);
-                    }).addOnSuccessListener(taskSnapshot1 -> {
-                        Uri downloadUrlThumb = taskSnapshot1.getUploadSessionUri();
-                        assert downloadUrlThumb != null;
-                        thumbImageUrl  = downloadUrlThumb.toString();
-                        Timber.d("uploadImage:    is succesfull ");
-                        mProgress.dismiss();
-                        uploadUserDetails();
+
+        UploadTask uploadThumbTask = thumbFilePath.putBytes(thumb_byte);
+        UploadTask uploadImageTask = imageFilePath.putBytes(main_bytes);
+
+        uploadImageTask.addOnSuccessListener(taskSnapshot -> {
+            if(uploadImageTask.isSuccessful()){
+                imageFilePath.getDownloadUrl().addOnSuccessListener(uri -> {
+                    mainImageUrl  = uri.toString();
+                    uploadThumbTask.addOnSuccessListener(taskSnapshot12 -> {
+                        if(uploadThumbTask.isSuccessful()){
+                            thumbFilePath.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                                thumbImageUrl  = uri1.toString();
+                                mProgress.dismiss();
+                                uploadUserDetails();
+                            });
+                        }else{
+                            Timber.d("uploadImages:    %s", taskSnapshot12.getError());
+                        }
                     });
-                })
-                .addOnFailureListener(exception -> {
-                    Toast.makeText(RegistrationAccount.this, "Some error occured. check your internet connection", Toast.LENGTH_SHORT).show();
-                    Timber.tag("Main Photo Upload   :  ").w(exception);
                 });
+            }else{
+                Timber.d("uploadImages:    %s", taskSnapshot.getError());
+            }
+        });
     }
 
     private boolean validateData(){
-        if(imageUri==null){
+        if(main_bytes == null){
             Toast.makeText(RegistrationAccount.this, "please select your image", Toast.LENGTH_SHORT).show();
             return false;
         }else if(name.equals("")){
@@ -268,6 +246,8 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
         Map < String, Object> userMap = getUserMap();
 
+        Timber.tag("Fulki").d("The details of the user is  ... %s", userMap.toString());
+
         //setting algolia search
         Client client = new Client( "YWTL46QL1P" , "fcdc55274ed56d6fb92f51c0d0fc46a0" );
         Index index = client.getIndex("users");
@@ -279,7 +259,7 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
         Map< String, Object> rating = new HashMap<>();
         rating.put("rating" , 0);
-        rating.put("user_name" , name);
+        rating.put("name" , name);
         rating.put("user_id" , mUserID);
         rating.put("thumb_image" , thumbImageUrl);
 
@@ -348,51 +328,11 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         userMap.put("rating" , 0);
         userMap.put("timestamp" , Functions.getTimeStamp());
         userMap.put("device_id" , deviceTokenID);
+
         return userMap;
     }
 
-    private void saveToSharedPref(){
-        PreferenceManager preferenceManager = new PreferenceManager(this);
-        preferenceManager.setBirthDate("");
-        preferenceManager.setBlood(bloodString);
-        preferenceManager.setDivision(divisionString);
-        preferenceManager.setGender(genderString);
-        preferenceManager.setUserId(mUserID);
-        preferenceManager.setUserName(name);
-        preferenceManager.setUserImage(mainImageUrl);
-        preferenceManager.setUserThumbImage(thumbImageUrl);
-        preferenceManager.setDistrict("");
-        preferenceManager.setLoggedIn(true);
-    }
 
-    private void setupSpinner(){
-
-
-        String[] myResArray = getResources().getStringArray(R.array.divisions_array);
-        mDivisionList = Arrays.asList(myResArray);
-
-        myResArray = getResources().getStringArray(R.array.blood_array);
-        mBloodList = Arrays.asList(myResArray);
-
-
-        //adapter for spinner we changed the view by using layout given bellow
-        mDivisionSpinner =  findViewById(R.id.settings_division_spinner);
-        ArrayAdapter<CharSequence> mDivisionAdapter = ArrayAdapter.createFromResource(this,
-                R.array.divisions_array, R.layout.spinner_layout);
-        mDivisionAdapter.setDropDownViewResource(R.layout.spinner_layout);
-        mDivisionSpinner.setAdapter(mDivisionAdapter);
-        mDivisionSpinner.setAdapter(mDivisionAdapter);
-        mDivisionSpinner.setOnItemSelectedListener(this);
-
-
-        mBloodSpinner = findViewById(R.id.settings_blood_spinner);
-        ArrayAdapter<CharSequence> mBloodAdapter = ArrayAdapter.createFromResource(this,
-                R.array.blood_array, R.layout.spinner_layout);
-        mBloodAdapter.setDropDownViewResource(R.layout.spinner_layout);
-        mBloodSpinner.setAdapter(mBloodAdapter);
-        mBloodSpinner.setAdapter(mBloodAdapter);
-        mBloodSpinner.setOnItemSelectedListener(this);
-    }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         switch(parent.getId()){
@@ -409,19 +349,6 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-    public void handleMaleClick(View view) {
-        mGender = 1; //male
-        mRegMale.setBackgroundResource(R.drawable.textview_selected);
-        mRegFemale.setBackgroundResource(R.drawable.textview_not_selected);
-    }
-
-    public void handleFemaleClick(View view) {
-        mGender = 0 ;//female
-        mRegMale.setBackgroundResource(R.drawable.textview_not_selected);
-        mRegFemale.setBackgroundResource(R.drawable.textview_selected);
-    }
-
 
     // DownloadImage AsyncTask
     private class DownloadImage extends AsyncTask<String, Void, Bitmap> {
@@ -449,90 +376,65 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         @Override
         protected void onPostExecute(Bitmap result) {
             mRegPhoto.setImageBitmap(result);
-            imageUri = Functions.bitmapToUriConverter(result, RegistrationAccount.this);
-            Timber.tag("Fulki").d("set Image bit map is succesful");
-            getImageUri(result);
+
+            if(result!=null){
+                Timber.tag("Fulki").d("bitmap is not null");
+                Functions.createLog("bitmap is not null");
+
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                result.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                main_bytes = baos.toByteArray();
+
+            }
+
             mProgressDialog.dismiss();
         }
     }
 
-    private void getImageUri( Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = "";
-
-        if(checkPermissionREAD_EXTERNAL_STORAGE(this)){
-            path = MediaStore.Images.Media.insertImage(this.getContentResolver(), inImage, "Title", "image");
-            imageUri =  Uri.parse(path);
-        }
-        Timber.tag("Fulki").d(path);
-    }
-
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-
-    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
-            final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        (Activity) context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    showDialog("External storage", context,
-                            Manifest.permission.READ_EXTERNAL_STORAGE);
-
-                } else {
-                    ActivityCompat.requestPermissions(
-                                    (Activity) context,
-                                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                }
-                return false;
-            } else {
-                return true;
-            }
-
-        } else {
-            return true;
-        }
-    }
-
-    public void showDialog(final String msg, final Context context,
-                           final String permission) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-        alertBuilder.setCancelable(true);
-        alertBuilder.setTitle("Permission necessary");
-        alertBuilder.setMessage(msg + " permission is necessary");
-        alertBuilder.setPositiveButton(android.R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        ActivityCompat.requestPermissions((Activity) context,
-                                new String[] { permission },
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                    }
-                });
-        AlertDialog alert = alertBuilder.create();
-        alert.show();
-    }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // do your stuff
-                } else {
-                    Toast.makeText(this, "GET_ACCOUNTS Denied",
-                            Toast.LENGTH_SHORT).show();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+
+                imageUri = result.getUri();
+                mRegPhoto.setImageURI(imageUri);
+                thumb_byte = Functions.CompressImage(imageUri , this);
+
+
+                InputStream iStream = null;
+                try {
+                    iStream = getContentResolver().openInputStream(imageUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions,
-                        grantResults);
+                try {
+                    main_bytes = getBytes(iStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                Timber.tag("Registration  :  ").w(error);
+            }
         }
+    }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
     }
 
 
@@ -579,29 +481,6 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
 
         }
     };
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
-
-                imageUri = result.getUri();
-                mRegPhoto.setImageURI(imageUri);
-                thumb_byte = Functions.CompressImage(imageUri , this);
-
-
-                //creating filepath for uploading the image
-                imageFilePath = mStorage.child("users").child(mUserID).child("Profile").child("profile_images").child(mUserID+".jpg");
-                thumbFilePath = mStorage.child("users").child(mUserID).child("Profile").child("thumb_images").child(mUserID+".jpg");
-
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-                Timber.tag("Registration  :  ").w(error);
-            }
-        }
-    }
 
     public void initViews(){
         mProgressDialog = new ProgressDialog(RegistrationAccount.this);
@@ -665,6 +544,39 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
         super.onPause();
     }
 
+
+    private void loadCategories(){
+        categoriesList = new ArrayList<>();
+        mCategoriesAdapter = new CategoriesAdapter(categoriesList,RegistrationAccount.this, RegistrationAccount.this);
+        mRegCategoryRecycler.setLayoutManager(new LinearLayoutManager(RegistrationAccount.this));
+        mRegCategoryRecycler.setAdapter(mCategoriesAdapter);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
+        DocumentReference docRef = firebaseFirestore.collection("categories_list").document("categories_list");
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                assert document != null;
+                if (document.exists()) {
+                    Timber.tag("Fulki").d("DocumentSnapshot data: %s", document.getData());
+                    List<String> categories = (List<String>) document.get("categories_list");
+
+                    assert categories != null;
+                    int len = categories.size();
+                    for(int i=0;i<len;i++){
+                        String category = categories.get(i);
+                        Categories temp= new Categories(category , false);
+                        categoriesList.add(temp);
+                    }
+                    mCategoriesAdapter.notifyDataSetChanged();
+                } else {
+                    Timber.tag("Fulki").d("No such document");
+                }
+            } else {
+                Timber.tag("Fulki").d(task.getException(), "get failed with ");
+            }
+        });
+    }
     private void getFacebookDetails(){
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
@@ -714,5 +626,57 @@ public class RegistrationAccount extends AppCompatActivity implements AdapterVie
             request.executeAsync();
         }
     }
+    public void handleMaleClick(View view) {
+        mGender = 1; //male
+        mRegMale.setBackgroundResource(R.drawable.textview_selected);
+        mRegFemale.setBackgroundResource(R.drawable.textview_not_selected);
+    }
+    public void handleFemaleClick(View view) {
+        mGender = 0 ;//female
+        mRegMale.setBackgroundResource(R.drawable.textview_not_selected);
+        mRegFemale.setBackgroundResource(R.drawable.textview_selected);
+    }
+    private void saveToSharedPref(){
+        PreferenceManager preferenceManager = new PreferenceManager(this);
+        preferenceManager.setBirthDate("");
+        preferenceManager.setBlood(bloodString);
+        preferenceManager.setDivision(divisionString);
+        preferenceManager.setGender(genderString);
+        preferenceManager.setUserId(mUserID);
+        preferenceManager.setUserName(name);
+        preferenceManager.setUserImage(mainImageUrl);
+        preferenceManager.setUserThumbImage(thumbImageUrl);
+        preferenceManager.setDistrict("");
+        preferenceManager.setLoggedIn(true);
+    }
+    private void setupSpinner(){
+
+
+        String[] myResArray = getResources().getStringArray(R.array.divisions_array);
+        mDivisionList = Arrays.asList(myResArray);
+
+        myResArray = getResources().getStringArray(R.array.blood_array);
+        mBloodList = Arrays.asList(myResArray);
+
+
+        //adapter for spinner we changed the view by using layout given bellow
+        mDivisionSpinner =  findViewById(R.id.settings_division_spinner);
+        ArrayAdapter<CharSequence> mDivisionAdapter = ArrayAdapter.createFromResource(this,
+                R.array.divisions_array, R.layout.spinner_layout);
+        mDivisionAdapter.setDropDownViewResource(R.layout.spinner_layout);
+        mDivisionSpinner.setAdapter(mDivisionAdapter);
+        mDivisionSpinner.setAdapter(mDivisionAdapter);
+        mDivisionSpinner.setOnItemSelectedListener(this);
+
+
+        mBloodSpinner = findViewById(R.id.settings_blood_spinner);
+        ArrayAdapter<CharSequence> mBloodAdapter = ArrayAdapter.createFromResource(this,
+                R.array.blood_array, R.layout.spinner_layout);
+        mBloodAdapter.setDropDownViewResource(R.layout.spinner_layout);
+        mBloodSpinner.setAdapter(mBloodAdapter);
+        mBloodSpinner.setAdapter(mBloodAdapter);
+        mBloodSpinner.setOnItemSelectedListener(this);
+    }
+
 
 }

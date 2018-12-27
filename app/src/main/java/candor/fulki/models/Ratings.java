@@ -2,18 +2,18 @@ package candor.fulki.models;
 
 public class Ratings {
 
-    private String user_name;
+    private String name;
     private String user_id;
     private String thumb_image;
     private long  rating;
     private long time_stamp;
 
     public String getUser_name() {
-        return user_name;
+        return name;
     }
 
     public void setUser_name(String user_name) {
-        this.user_name = user_name;
+        this.name = user_name;
     }
 
     public String getUser_id() {
@@ -44,8 +44,8 @@ public class Ratings {
 
     }
 
-    public Ratings(String user_name, String user_id, String thumb_image, long rating) {
-        this.user_name = user_name;
+    public Ratings(String name, String user_id, String thumb_image, long rating) {
+        this.name = name;
         this.user_id = user_id;
         this.thumb_image = thumb_image;
         this.rating = rating;
