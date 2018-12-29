@@ -4,7 +4,6 @@ package candor.fulki;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.database.FirebaseDatabase;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
@@ -19,7 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
-import candor.fulki.utilities.UniversalImageLoader;
+import candor.fulki.utils.UniversalImageLoader;
 import io.fabric.sdk.android.Fabric;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;

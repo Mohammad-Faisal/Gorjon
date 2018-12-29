@@ -26,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".general.MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +38,7 @@
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <activity
 
-            android:name=".profile.RegistrationAccount"
+            android:name=".activities.RegistrationAccountActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -50,38 +50,38 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".profile.ProfileActivity"
+            android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".search.SearchActivity"
+            android:name=".activities.SearchActivityS"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.ShowPostActivity"
+            android:name=".activities.ShowPostActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ShowPost" />
         <activity
-            android:name=".profile.ProfileSettingsActivity"
+            android:name=".activities.ProfileSettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".notification.NotificationActivity"
+            android:name=".activities.NotificationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".explore.ExploreActivity"
+            android:name=".activities.ExploreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".chat.ChatActivity"
+            android:name=".activities.ChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".chat.InboxActivity"
+            android:name=".activities.InboxActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".chat.meeting.MeetingActivity"
+            android:name=".activities.MeetingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".chat.meeting.InvitePeopleToMeetingActivity"
+            android:name=".activities.InvitePeopleToMeetingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".chat.meeting.CreateMeetingActivity"
+            android:name=".activities.CreateMeetingActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -102,35 +102,37 @@
             android:value="@string/google_maps_api_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".profile.ShowPleopleListActivity"
+            android:name=".activities.ShowPleopleListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".general.SearchActivity"
-            android:parentActivityName=".general.MainActivity"
+            android:name=".activities.SearchActivityF"
+            android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".explore.events.CreateEventActivity"
-            android:parentActivityName=".explore.ExploreActivity"
+            android:name=".activities.CreateEventActivity"
+            android:parentActivityName=".activities.ExploreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".explore.events.ShowEventActivity"
-            android:parentActivityName=".explore.ExploreActivity"
+            android:name=".activities.ShowEventActivity"
+            android:parentActivityName=".activities.ExploreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".home.HomeActivity"
+            android:name=".activities.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".profile.ShowProfileImageActivity"
+            android:name=".activities.ShowProfileImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_show_profile_image"
-            android:parentActivityName=".profile.ProfileActivity"
+            android:parentActivityName=".activities.ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".home.CreatePostActivity"/>
+        <activity android:name=".activities.CreatePostActivity"
+            android:screenOrientation="portrait"
+            />
 
 
 
