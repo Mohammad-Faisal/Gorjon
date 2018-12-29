@@ -1,7 +1,7 @@
 package candor.fulki.activities.profile;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -79,6 +79,7 @@ public class ShowPleopleListActivity extends AppCompatActivity {
                 .orderBy("timestamp" , Query.Direction.DESCENDING)
                 .limit(100);
         nextQuery.addSnapshotListener(ShowPleopleListActivity.this , (documentSnapshots, e) -> {
+            assert documentSnapshots != null;
             if(!documentSnapshots.isEmpty()){
                 lastVisible = documentSnapshots.getDocuments().get(documentSnapshots.size()-1);
                 //isFirstPageLoaded = true;

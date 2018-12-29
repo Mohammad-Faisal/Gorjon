@@ -2,6 +2,7 @@ package candor.fulki.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +19,11 @@ import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-
+import candor.fulki.R;
 import candor.fulki.adapters.ListPeopleAdapter;
 import candor.fulki.models.UserBasic;
-import candor.fulki.R;
 import timber.log.Timber;
 
 
@@ -31,11 +32,8 @@ public class PeopleFragment extends Fragment {
     private static final String TAG = "PeopleFragment";
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    //containers
-    private RecyclerView mPeopleList;
     private DocumentSnapshot lastVisible = null;
     private final List<UserBasic> userList = new ArrayList<>();
-    private LinearLayoutManager mLinearLayout;
     private ListPeopleAdapter mPeopleAdapter;
     private boolean isFirstPageLoad = true;
     String mUserID;
@@ -56,30 +54,27 @@ public class PeopleFragment extends Fragment {
 
         mUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        if(mUserID!=null){
-            mPeopleAdapter = new ListPeopleAdapter(userList , getContext() , getActivity());
-            mPeopleList = view.findViewById(R.id.fragment_peopole_recycler);
-            mLinearLayout = new LinearLayoutManager(getContext());
-            mPeopleList.hasFixedSize();
-            mPeopleList.setLayoutManager(mLinearLayout);
-            mPeopleList.setAdapter(mPeopleAdapter);
+        mPeopleAdapter = new ListPeopleAdapter(userList , getContext() , getActivity());
+        RecyclerView mPeopleList = view.findViewById(R.id.fragment_peopole_recycler);
+        LinearLayoutManager mLinearLayout = new LinearLayoutManager(getContext());
+        mPeopleList.hasFixedSize();
+        mPeopleList.setLayoutManager(mLinearLayout);
+        mPeopleList.setAdapter(mPeopleAdapter);
 
 
-            loadFirstData();
+        loadFirstData();
 
-            mPeopleList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    Boolean reachedBottom = !recyclerView.canScrollVertically(1);
-                    if(reachedBottom){
-                        Log.d(TAG, "onScrolled:      reached bottom ");
-                        loadMorePost();
-                    }
+        mPeopleList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                Boolean reachedBottom = !recyclerView.canScrollVertically(1);
+                if(reachedBottom){
+                    Log.d(TAG, "onScrolled:      reached bottom ");
+                    loadMorePost();
                 }
-            });
+            }
+        });
 
-
-        }
 
         return view;
     }
@@ -91,7 +86,7 @@ public class PeopleFragment extends Fragment {
 
         Query nextQuery = firebaseFirestore.collection("ratings")
                 .limit(30);
-        nextQuery.addSnapshotListener(getActivity(), (documentSnapshots, e) -> {
+        nextQuery.addSnapshotListener(Objects.requireNonNull(getActivity()), (documentSnapshots, e) -> {
             if(documentSnapshots!=null){
                 if(!documentSnapshots.isEmpty()){
                     if(isFirstPageLoad==true){
@@ -107,8 +102,6 @@ public class PeopleFragment extends Fragment {
 
 
                             Timber.tag("Fulki").d("people fragment:  user name : %s", doc.getDocument().getString("name"));
-
-
 
                             userList.add(basic);
                             mPeopleAdapter.notifyDataSetChanged();

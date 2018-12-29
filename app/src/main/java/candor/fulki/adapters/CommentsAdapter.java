@@ -27,15 +27,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import candor.fulki.models.Posts;
-import candor.fulki.models.Ratings;
-import candor.fulki.utils.Functions;
-import candor.fulki.utils.GetTimeAgo;
+import candor.fulki.R;
+import candor.fulki.activities.profile.ProfileActivity;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
-import candor.fulki.activities.profile.ProfileActivity;
-import candor.fulki.R;
+import candor.fulki.models.Posts;
+import candor.fulki.utils.Functions;
+import candor.fulki.utils.GetTimeAgo;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -277,22 +276,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.PostCo
         }
 
         private void addRating(String mUserID  , int factor) {
-
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            Timber.d("addRating:   function calledd !!!!");
-            final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                    .document(mUserID);
-            firebaseFirestore.runTransaction(transaction -> {
-
-                Ratings ratings = transaction.get(ratingRef)
-                        .toObject(Ratings.class);
-                long curRating = ratings.getRating();
-                long nextRating = curRating + factor;
-
-                ratings.setRating(nextRating);
-                transaction.set(ratingRef, ratings);
-                return null;
-            });
+             Functions.addRating(mUserID , factor);
         }
 
         @SuppressLint("SetTextI18n")

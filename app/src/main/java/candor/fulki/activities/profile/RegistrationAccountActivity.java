@@ -7,8 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
@@ -55,12 +54,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import candor.fulki.R;
 import candor.fulki.activities.MainActivity;
 import candor.fulki.adapters.CategoriesAdapter;
-import candor.fulki.utils.Functions;
-import candor.fulki.R;
-
 import candor.fulki.models.Categories;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -238,10 +236,11 @@ public class RegistrationAccountActivity extends AppCompatActivity implements Ad
 
 
         Map< String, Object> rating = new HashMap<>();
-        rating.put("rating" , 0);
+
         rating.put("name" ,mRegName.getText().toString());
         rating.put("user_id" , mUserID);
         rating.put("thumb_image" , thumbImageUrl);
+        rating.put("rating" , 0);
 
 
 

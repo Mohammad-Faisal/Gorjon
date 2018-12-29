@@ -12,19 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-import candor.fulki.activities.explore.ShowEventActivity;
-import candor.fulki.models.Ratings;
 import candor.fulki.R;
+import candor.fulki.activities.explore.ShowEventActivity;
 import candor.fulki.models.Events;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.ImageManager;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> {
@@ -130,23 +128,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
             ImageManager.setImageWithGlide(imageURL , eventImage , context);
         }
 
-        private Task<Void> addRating(String mUserID  , int factor) {
-
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            Log.d(TAG, "addRating:   function calledd !!!!");
-            final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                    .document(mUserID);
-            return firebaseFirestore.runTransaction(transaction -> {
-
-                Ratings ratings = transaction.get(ratingRef)
-                        .toObject(Ratings.class);
-                long curRating = ratings.getRating();
-                long nextRating = curRating + factor;
-
-                ratings.setRating(nextRating);
-                transaction.set(ratingRef, ratings);
-                return null;
-            });
+        private void addRating(String mUserID  , int factor) {
+            Functions.addRating(mUserID,factor);
         }
 
 

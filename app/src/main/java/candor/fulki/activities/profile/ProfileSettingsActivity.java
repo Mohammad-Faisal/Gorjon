@@ -10,14 +10,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,12 +61,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import candor.fulki.activities.home.HomeActivity;
-import candor.fulki.utils.Functions;
-import candor.fulki.adapters.DIistrictsAdapter;
-import candor.fulki.models.Ratings;
 import candor.fulki.R;
+import candor.fulki.activities.home.HomeActivity;
+import candor.fulki.adapters.DIistrictsAdapter;
 import candor.fulki.models.UserSearch;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.ImageManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -577,22 +575,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
 
 
     private void addRating(String mUserID  , int factor) {
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        Log.d(TAG, "addRating:   function calledd !!!!");
-        final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                .document(mUserID);
-        firebaseFirestore.runTransaction(transaction -> {
-
-            Ratings ratings = transaction.get(ratingRef)
-                    .toObject(Ratings.class);
-            long curRating = ratings.getRating();
-            long nextRating = curRating + factor;
-
-            ratings.setRating(nextRating);
-            transaction.set(ratingRef, ratings);
-            return null;
-        });
+        Functions.addRating(mUserID , factor);
     }
 
     private boolean setData(){

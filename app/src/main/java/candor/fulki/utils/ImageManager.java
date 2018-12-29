@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.widget.ImageView;
 
-
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -39,7 +38,6 @@ public class ImageManager {
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
         return baos.toByteArray();
     }
-
 
     public static byte[] getByteArrayFromImageUri(Uri imageUri, int quality  , Context context ){
         Bitmap temp_bitmap = getBitmapFromImageUri(imageUri, context);

@@ -3,8 +3,8 @@ package candor.fulki.activities.home;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,20 +25,19 @@ import com.google.firebase.firestore.WriteBatch;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import candor.fulki.R;
 import candor.fulki.activities.profile.ShowPleopleListActivity;
 import candor.fulki.adapters.CommentsAdapter;
-import candor.fulki.models.Posts;
-import candor.fulki.models.Ratings;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
-import candor.fulki.R;
+import candor.fulki.models.Posts;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -387,22 +386,7 @@ public class ShowPostActivity extends AppCompatActivity implements BaseSliderVie
 
 
     private void addRating(String mUserID  , int factor) {
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        Timber.d("addRating:   function calledd !!!!");
-        final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                .document(mUserID);
-        firebaseFirestore.runTransaction(transaction -> {
-
-            Ratings ratings = transaction.get(ratingRef)
-                    .toObject(Ratings.class);
-            long curRating = ratings.getRating();
-            long nextRating = curRating + factor;
-
-            ratings.setRating(nextRating);
-            transaction.set(ratingRef, ratings);
-            return null;
-        });
+        Functions.addRating(mUserID , factor);
     }
 
     @SuppressLint("SetTextI18n")

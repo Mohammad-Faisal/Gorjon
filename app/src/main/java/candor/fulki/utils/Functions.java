@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
@@ -28,7 +25,6 @@ import candor.fulki.models.UserBasic;
 import timber.log.Timber;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
-import static com.sun.mail.util.ASCIIUtility.getBytes;
 
 public class Functions {
 
@@ -62,7 +58,6 @@ public class Functions {
 
     public static void addRating(String mUserID , long rating) {
 
-        Log.d("Functions", "addRating:    "+mUserID);
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
                 .document(mUserID);
@@ -70,8 +65,12 @@ public class Functions {
 
             Ratings ratings = transaction.get(ratingRef)
                     .toObject(Ratings.class);
+            Timber.tag("Fulki").d("I am inside rating transaction");
+            Timber.tag("Fulki").d(ratings.getName());
+            Timber.tag("Fulki").d(ratings.getThumb_image());
+            Timber.tag("Fulki").d(ratings.getUser_id());
 
-            assert ratings != null;
+
             long curRating = ratings.getRating();
             long nextRating = curRating + rating;
 
@@ -109,30 +108,6 @@ public class Functions {
     }
 
 
-
-
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
 
 
     public static void logOut(){

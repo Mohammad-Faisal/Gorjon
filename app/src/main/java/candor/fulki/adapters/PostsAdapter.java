@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
@@ -51,15 +50,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import candor.fulki.models.Posts;
+import candor.fulki.R;
 import candor.fulki.activities.home.ShowPostActivity;
-import candor.fulki.models.Ratings;
+import candor.fulki.activities.profile.ProfileActivity;
+import candor.fulki.activities.profile.ShowPleopleListActivity;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
-import candor.fulki.activities.profile.ProfileActivity;
-import candor.fulki.activities.profile.ShowPleopleListActivity;
-import candor.fulki.R;
+import candor.fulki.models.Posts;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.GMailSender;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
@@ -547,7 +546,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                 postSlider.setCustomAnimation(new DescriptionAnimation());
                 postSlider.setDuration(3000);
                 postSlider.addOnPageChangeListener(this);
-                postSlider.setCustomIndicator((PagerIndicator) itemView.findViewById(R.id.custom_indicator));
+                postSlider.setCustomIndicator(itemView.findViewById(R.id.custom_indicator));
             } else {
                 if(postSlider!=null)postSlider.setVisibility(View.GONE);
 
@@ -573,20 +572,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         }
 
         private void addRating(String mUserID  , int factor) {
-
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            Timber.d("addRating:   function calledd !!!!");
-            final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                    .document(mUserID);
-            firebaseFirestore.runTransaction(transaction -> {
-                Ratings ratings = transaction.get(ratingRef)
-                        .toObject(Ratings.class);
-                long curRating = ratings.getRating();
-                long nextRating = curRating + factor;
-                ratings.setRating(nextRating);
-                transaction.set(ratingRef, ratings);
-                return null;
-            });
+            Functions.addRating(mUserID, factor);
         }
 
         private void addLike( String mPostID , int factor) {

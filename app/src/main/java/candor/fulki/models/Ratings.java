@@ -5,15 +5,14 @@ public class Ratings {
     private String name;
     private String user_id;
     private String thumb_image;
-    private long  rating;
-    private long time_stamp;
+    private long   rating;
 
-    public String getUser_name() {
-        return name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setUser_name(String user_name) {
-        this.name = user_name;
+    public String getName() {
+        return name;
     }
 
     public String getUser_id() {

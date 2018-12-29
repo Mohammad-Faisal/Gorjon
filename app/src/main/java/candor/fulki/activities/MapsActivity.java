@@ -25,7 +25,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -50,7 +49,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
@@ -60,13 +58,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import candor.fulki.activities.profile.ProfileActivity;
-import candor.fulki.models.Locationdetail;
 import candor.fulki.R;
+import candor.fulki.activities.profile.ProfileActivity;
 import candor.fulki.adapters.CustomInfoWindowAdapter;
 import candor.fulki.adapters.HorizontalRecyclerAdapterfortopic;
+import candor.fulki.models.Locationdetail;
 import candor.fulki.utils.Functions;
-import candor.fulki.models.Ratings;
 import candor.fulki.utils.PreferenceManager;
 import timber.log.Timber;
 
@@ -548,23 +545,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    private Task<Void> addRating(String mUserID  , int factor) {
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        Timber.d("addRating:   function calledd !!!!");
-        final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                .document(mUserID);
-        return firebaseFirestore.runTransaction(transaction -> {
-
-            Ratings ratings = transaction.get(ratingRef)
-                    .toObject(Ratings.class);
-            long curRating = ratings.getRating();
-            long nextRating = curRating + factor;
-
-            ratings.setRating(nextRating);
-            transaction.set(ratingRef, ratings);
-            return null;
-        });
+    private void addRating(String mUserID  , int factor) {
+       Functions.addRating(mUserID, factor);
     }
 
 

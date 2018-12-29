@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,12 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import candor.fulki.activities.chat.ChatActivity;
-import candor.fulki.models.Ratings;
-import candor.fulki.models.UserBasic;
-import candor.fulki.models.Notifications;
 import candor.fulki.R;
+import candor.fulki.activities.chat.ChatActivity;
 import candor.fulki.activities.profile.ProfileActivity;
+import candor.fulki.models.Notifications;
+import candor.fulki.models.UserBasic;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -267,22 +268,7 @@ public class ListPeopleAdapter extends RecyclerView.Adapter<ListPeopleAdapter.Li
 
 
         private void addRating(String mUserID  , int factor) {
-
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            Timber.d("addRating:   function calledd !!!!");
-            final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                    .document(mUserID);
-            firebaseFirestore.runTransaction(transaction -> {
-
-                Ratings ratings = transaction.get(ratingRef)
-                        .toObject(Ratings.class);
-                long curRating = ratings.getRating();
-                long nextRating = curRating + factor;
-
-                ratings.setRating(nextRating);
-                transaction.set(ratingRef, ratings);
-                return null;
-            });
+            Functions.addRating(mUserID , factor);
         }
 
 

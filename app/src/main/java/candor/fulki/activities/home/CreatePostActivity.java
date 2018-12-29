@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,13 +35,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import candor.fulki.utils.Functions;
-import candor.fulki.models.Posts;
-import candor.fulki.models.Ratings;
-import candor.fulki.utils.FileUtil;
 import candor.fulki.R;
 import candor.fulki.models.PostFiles;
+import candor.fulki.models.Posts;
+import candor.fulki.utils.FileUtil;
+import candor.fulki.utils.Functions;
 import id.zelory.compressor.Compressor;
+import timber.log.Timber;
 
 public class CreatePostActivity extends AppCompatActivity {
 
@@ -199,7 +199,7 @@ public class CreatePostActivity extends AppCompatActivity {
         firebaseFirestore.collection("posts").document(postPushId).set(postMap).addOnCompleteListener(task -> {
             //mProgress.dismiss();
             if(task.isSuccessful()){
-                Log.d(TAG, "uploadPost:     post upload succesfull ");
+                Timber.d("uploadPost:     post upload succesfull ");
                 mProgress.dismiss();
                 Functions.addRating(mUserID , 5);
                 Toast.makeText(CreatePostActivity.this, "Success !", Toast.LENGTH_SHORT).show();
@@ -208,7 +208,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 finish();
             }else{
                 mProgress.dismiss();
-                Log.d(TAG, "uploadPost:     error  !! "+task.getException());
+                Timber.d("uploadPost:     error  !! " + task.getException());
                 Toast.makeText(CreatePostActivity.this, "There was an error in uploading post!" + task.getException()
                         , Toast.LENGTH_SHORT).show();
             }
@@ -224,8 +224,7 @@ public class CreatePostActivity extends AppCompatActivity {
         mProgress.setCanceledOnTouchOutside(false);
         mProgress.show();
 
-        Log.d(TAG, "validatePost:     started ");
-        
+
         
         String caption = mCaption.getText().toString();
         String location = mLocation.getText().toString();
@@ -389,26 +388,6 @@ public class CreatePostActivity extends AppCompatActivity {
                     .show();
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    private void addRating(String mUserID) {
-
-        Log.d(TAG, "addRating:    "+mUserID);
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                .document(mUserID);
-        firebaseFirestore.runTransaction(transaction -> {
-
-            Ratings ratings = transaction.get(ratingRef)
-                    .toObject(Ratings.class);
-            long curRating = ratings.getRating();
-            long nextRating = curRating + 15;
-
-            ratings.setRating(nextRating);
-            transaction.set(ratingRef, ratings);
-            return null;
-        });
     }
 
 

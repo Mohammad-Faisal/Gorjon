@@ -26,16 +26,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
-import candor.fulki.utils.GetTimeAgo;
-import candor.fulki.models.Ratings;
-import candor.fulki.activities.home.ShowPostActivity;
-import candor.fulki.models.Notifications;
-import candor.fulki.activities.profile.ProfileActivity;
 import candor.fulki.R;
+import candor.fulki.activities.home.ShowPostActivity;
+import candor.fulki.activities.profile.ProfileActivity;
+import candor.fulki.models.Notifications;
+import candor.fulki.utils.GetTimeAgo;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -346,27 +345,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         public void setImage(String imageURL , final Context context , int drawable_id ){
             ImageManager.setImageWithGlide(imageURL, notificationImage, context);
         }
-
-
-        private Task<Void> addRating(String mUserID  , int factor) {
-
-            FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-            Log.d(TAG, "addRating:   function calledd !!!!");
-            final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                    .document(mUserID);
-            return firebaseFirestore.runTransaction(transaction -> {
-
-                Ratings ratings = transaction.get(ratingRef)
-                        .toObject(Ratings.class);
-                long curRating = ratings.getRating();
-                long nextRating = curRating + factor;
-
-                ratings.setRating(nextRating);
-                transaction.set(ratingRef, ratings);
-                return null;
-            });
-        }
-
     }
 
 

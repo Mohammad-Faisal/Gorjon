@@ -1,9 +1,9 @@
 package candor.fulki.activities.explore;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,22 +23,24 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.WriteBatch;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import candor.fulki.R;
 import candor.fulki.activities.profile.ShowPleopleListActivity;
 import candor.fulki.adapters.CommentsAdapter;
 import candor.fulki.models.Comments;
-import candor.fulki.models.Ratings;
 import candor.fulki.models.Events;
 import candor.fulki.models.Joins;
 import candor.fulki.models.Notifications;
-import candor.fulki.R;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
+import timber.log.Timber;
 
 public class ShowEventActivity extends AppCompatActivity {
 
@@ -281,9 +283,10 @@ public class ShowEventActivity extends AppCompatActivity {
 
         firebaseFirestore.collection("events").document(eventID).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
-                if(task.getResult().exists()){
+                if(Objects.requireNonNull(task.getResult()).exists()){
                     Events events = task.getResult().toObject(Events.class);
 
+                    assert events != null;
                     eventDate.setText(events.getTime_and_date());
                     eventLocation.setText(events.getLocation());
                     eventTitle.setText(events.getTitle());
@@ -328,33 +331,18 @@ public class ShowEventActivity extends AppCompatActivity {
     }
 
 
-    private Task<Void> addRating(String mUserID  , int factor) {
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        Log.d(TAG, "addRating:   function calledd !!!!");
-        final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                .document(mUserID);
-        return firebaseFirestore.runTransaction(transaction -> {
-
-            Ratings ratings = transaction.get(ratingRef)
-                    .toObject(Ratings.class);
-            long curRating = ratings.getRating();
-            long nextRating = curRating + factor;
-
-            ratings.setRating(nextRating);
-            transaction.set(ratingRef, ratings);
-            return null;
-        });
+    private void addRating(String mUserID  , int factor) {
+        Functions.addRating(mUserID , factor);
     }
 
     private void setPeopleCount(long cnt){
-        Log.d(TAG, "setPeopleCount:  called "+cnt);
+        Timber.d("setPeopleCount:  called " + cnt);
         eventPeopleCnt.setText(cnt + " people");
     }
 
     private void addPeople( String eventID , int factor) {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        Log.d(TAG, "addPeople:   function calledd !!!!");
+        Timber.d("addPeople:   function calledd !!!!");
         final DocumentReference eventRef = FirebaseFirestore.getInstance().collection("events")
                 .document(eventID);
 

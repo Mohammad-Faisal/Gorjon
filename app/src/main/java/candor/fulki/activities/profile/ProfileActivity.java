@@ -3,12 +3,12 @@ package candor.fulki.activities.profile;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -36,20 +36,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import candor.fulki.activities.explore.ExploreActivity;
+import candor.fulki.R;
 import candor.fulki.activities.MainActivity;
 import candor.fulki.activities.MapsActivity;
 import candor.fulki.activities.NotificationActivity;
 import candor.fulki.activities.chat.ChatActivity;
 import candor.fulki.activities.chat.InboxActivity;
+import candor.fulki.activities.explore.ExploreActivity;
 import candor.fulki.activities.home.HomeActivity;
 import candor.fulki.activities.search.SearchActivityF;
 import candor.fulki.adapters.PostsAdapter;
-import candor.fulki.utils.Functions;
-import candor.fulki.models.Posts;
-import candor.fulki.models.Ratings;
 import candor.fulki.models.Notifications;
-import candor.fulki.R;
+import candor.fulki.models.Posts;
+import candor.fulki.utils.Functions;
 import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -60,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private static final String TAG = "ProfileActivity";
-    private String mUserID = "" , mUserImage ,  mUserName ,  mUserThumbImage , mCurProfileId , mCurUserImage , mCurUserName , mCurUserTHumbImage;;
+    private String mUserID = "" , mUserImage ,  mUserName ,  mUserThumbImage , mCurProfileId , mCurUserImage , mCurUserName , mCurUserTHumbImage;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private PostsAdapter mPostsAdapter;
     private List<Posts> posts;
@@ -384,22 +383,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     private void addRating(String mUserID  , int factor) {
-
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        timber.log.Timber.tag(TAG).d("addRating:   function calledd !!!!");
-        final DocumentReference ratingRef = FirebaseFirestore.getInstance().collection("ratings")
-                .document(mUserID);
-        firebaseFirestore.runTransaction(transaction -> {
-
-            Ratings ratings = transaction.get(ratingRef)
-                    .toObject(Ratings.class);
-            long curRating = ratings.getRating();
-            long nextRating = curRating + factor;
-
-            ratings.setRating(nextRating);
-            transaction.set(ratingRef, ratings);
-            return null;
-        });
+        Functions.addRating(mUserID,factor);
     }
 
 
