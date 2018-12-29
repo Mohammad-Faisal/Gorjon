@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import candor.fulki.activities.chat.InboxActivity;
 import candor.fulki.adapters.ExplorePagerAdapter;
 import candor.fulki.utils.Functions;
 import candor.fulki.R;

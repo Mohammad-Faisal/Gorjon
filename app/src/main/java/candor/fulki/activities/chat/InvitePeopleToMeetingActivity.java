@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.chat;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

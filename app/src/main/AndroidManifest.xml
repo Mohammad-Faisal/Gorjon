@@ -69,19 +69,19 @@
             android:name=".activities.ExploreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ChatActivity"
+            android:name=".activities.chat.ChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.InboxActivity"
+            android:name=".activities.chat.InboxActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.MeetingActivity"
+            android:name=".activities.chat.MeetingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.InvitePeopleToMeetingActivity"
+            android:name=".activities.chat.InvitePeopleToMeetingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.CreateMeetingActivity"
+            android:name=".activities.chat.CreateMeetingActivity"
             android:screenOrientation="portrait" />
 
         <meta-data

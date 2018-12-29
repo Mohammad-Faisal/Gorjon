@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import candor.fulki.activities.ChatActivity;
+import candor.fulki.activities.chat.ChatActivity;
 import candor.fulki.models.Ratings;
 import candor.fulki.models.UserBasic;
 import candor.fulki.models.Notifications;

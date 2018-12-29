@@ -19,6 +19,7 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import java.util.ArrayList;
 import java.util.List;
 
+import candor.fulki.activities.chat.InboxActivity;
 import candor.fulki.adapters.NotificationsAdapter;
 import candor.fulki.utils.Functions;
 import candor.fulki.models.Notifications;

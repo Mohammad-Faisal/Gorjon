@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import candor.fulki.activities.chat.ChatActivity;
+import candor.fulki.activities.chat.InboxActivity;
 import candor.fulki.adapters.PostsAdapter;
 import candor.fulki.utils.Functions;
 import candor.fulki.models.Posts;

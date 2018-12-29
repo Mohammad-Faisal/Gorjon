@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.chat;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

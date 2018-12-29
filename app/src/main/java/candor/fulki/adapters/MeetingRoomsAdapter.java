@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import candor.fulki.R;
-import candor.fulki.activities.MeetingActivity;
+import candor.fulki.activities.chat.MeetingActivity;
 import candor.fulki.models.MeetingRooms;
 
 
