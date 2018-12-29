@@ -11,7 +11,7 @@ android {
         applicationId "candor.fulki"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 11
+        versionCode 12
         versionName "1.10.1"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -22,7 +22,7 @@ android {
             resValue "string", "google_maps_api_key", "AIzaSyCuSvsQffXfJQ88qSsWgojS7cHIP6rj6SY"
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             resValue "string", "google_maps_api_key", "AIzaSyB2MPJusgrJ790KT5zQcxRBv9idiBd00zM"
         }
     }
@@ -68,20 +68,18 @@ dependencies {
     implementation 'com.github.jd-alexander:LikeButton:0.2.3'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.2'
 
-    //pickasso image loading library
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    //image compressing library
+
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+
+
     implementation 'id.zelory:compressor:2.1.0'
-    //multidex er joonno
     implementation 'com.android.support:multidex:1.0.3'
-    //for offline support in picasso
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.nineoldandroids:library:2.4.0'
     implementation 'com.daimajia.slider:library:1.1.5@aar'
-    //firebasee
+
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.google.firebase:firebase-storage:16.0.5'
     implementation 'com.google.firebase:firebase-core:16.0.6'

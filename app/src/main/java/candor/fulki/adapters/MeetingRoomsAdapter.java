@@ -11,15 +11,12 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import candor.fulki.R;
 import candor.fulki.activities.chat.MeetingActivity;
 import candor.fulki.models.MeetingRooms;
+import candor.fulki.utils.ImageManager;
 
 
 /**
@@ -79,13 +76,13 @@ public class MeetingRoomsAdapter extends RecyclerView.Adapter<MeetingRoomsAdapte
         return mMeetingRoomsList.size();
     }
 
-    public class MeetingRoomsViewHolder extends RecyclerView.ViewHolder {
+    class MeetingRoomsViewHolder extends RecyclerView.ViewHolder {
 
 
-        public TextView meetingTitle , meetingTag , meetingNumberPerson;
-        public ImageView meetingImage;
+        TextView meetingTitle , meetingTag , meetingNumberPerson;
+        ImageView meetingImage;
 
-        public MeetingRoomsViewHolder(View itemView) {
+        MeetingRoomsViewHolder(View itemView) {
             super(itemView);
             meetingImage = itemView.findViewById(R.id.item_meeting_room_image);
             meetingNumberPerson = itemView.findViewById(R.id.item_meeting_room_number_of_people);
@@ -94,26 +91,9 @@ public class MeetingRoomsAdapter extends RecyclerView.Adapter<MeetingRoomsAdapte
         }
 
 
-        public void setImage(final String imageURL , final Context context ){
-            if(imageURL.equals("default")){
-
-            }
-            else{
-                Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE)
-                        .placeholder(R.drawable.ic_blank_profile).into(meetingImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        //do nothing if an image is found offline
-                    }
-                    @Override
-                    public void onError() {
-                        Picasso.with(context).load(imageURL).placeholder(R.drawable.ic_blank_profile).into(meetingImage);
-                    }
-                });
-            }
+        void setImage(final String imageURL, final Context context){
+            ImageManager.setImageWithGlide(imageURL ,meetingImage , context );
         }
-
-
 
     }
 }

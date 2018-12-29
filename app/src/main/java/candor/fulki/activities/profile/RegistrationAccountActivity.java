@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.profile;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -55,11 +55,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import candor.fulki.activities.MainActivity;
 import candor.fulki.adapters.CategoriesAdapter;
 import candor.fulki.utils.Functions;
 import candor.fulki.R;
 
 import candor.fulki.models.Categories;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -90,7 +92,7 @@ public class RegistrationAccountActivity extends AppCompatActivity implements Ad
 
 
     String photo=null;
-    String name = null;
+    String name = "";
     String email = null;
     Bitmap userBitmap = null;
 
@@ -147,8 +149,8 @@ public class RegistrationAccountActivity extends AppCompatActivity implements Ad
         mUserID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
 
-        mRegPhoto.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccountActivity.this));
-        mRegCamera.setOnClickListener(v -> Functions.BringImagePicker(RegistrationAccountActivity.this));
+        mRegPhoto.setOnClickListener(v -> ImageManager.BringImagePicker(RegistrationAccountActivity.this));
+        mRegCamera.setOnClickListener(v -> ImageManager.BringImagePicker(RegistrationAccountActivity.this));
         mRegSave.setOnClickListener(v -> {
             name = mRegName.getText().toString();
             if(Functions.isDataAvailable(this)){
@@ -222,7 +224,6 @@ public class RegistrationAccountActivity extends AppCompatActivity implements Ad
 
     private void uploadUserDetails(){
 
-
         Map < String, Object> userMap = getUserMap();
 
         Timber.tag("Fulki").d("The details of the user is  ... %s", userMap.toString());
@@ -238,7 +239,7 @@ public class RegistrationAccountActivity extends AppCompatActivity implements Ad
 
         Map< String, Object> rating = new HashMap<>();
         rating.put("rating" , 0);
-        rating.put("name" , name);
+        rating.put("name" ,mRegName.getText().toString());
         rating.put("user_id" , mUserID);
         rating.put("thumb_image" , thumbImageUrl);
 
@@ -357,8 +358,8 @@ public class RegistrationAccountActivity extends AppCompatActivity implements Ad
             mRegPhoto.setImageBitmap(result);
 
             if(result!=null){
-                main_bytes = Functions.getByteArrayFrombitmap(result , 100);
-                thumb_byte = Functions.getByteArrayFrombitmap(result , 30);
+                main_bytes = ImageManager.getByteArrayFrombitmap(result , 100);
+                thumb_byte = ImageManager.getByteArrayFrombitmap(result , 30);
             }
             mProgressDialog.dismiss();
         }
@@ -371,8 +372,8 @@ public class RegistrationAccountActivity extends AppCompatActivity implements Ad
             if (resultCode == RESULT_OK) {
                 imageUri = result.getUri();
                 mRegPhoto.setImageURI(imageUri);
-                thumb_byte = Functions.getByteArrayFromImageUri(imageUri , 30 , this);
-                main_bytes = Functions.getByteArrayFromImageUri(imageUri , 100 , this);
+                thumb_byte = ImageManager.getByteArrayFromImageUri(imageUri , 30 , this);
+                main_bytes = ImageManager.getByteArrayFromImageUri(imageUri , 100 , this);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 Timber.tag("Registration  :  ").w(error);

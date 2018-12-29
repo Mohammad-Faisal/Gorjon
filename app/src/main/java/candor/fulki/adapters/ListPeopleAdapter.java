@@ -19,10 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +32,8 @@ import candor.fulki.models.Ratings;
 import candor.fulki.models.UserBasic;
 import candor.fulki.models.Notifications;
 import candor.fulki.R;
-import candor.fulki.activities.ProfileActivity;
+import candor.fulki.activities.profile.ProfileActivity;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -86,10 +83,9 @@ public class ListPeopleAdapter extends RecyclerView.Adapter<ListPeopleAdapter.Li
         String mListUserName = c.getmUserName();
         String mListUserThumbImage = c.getmUserThumbImage();
 
-        Timber.d("onBindViewHolder:  user id : %s", mListUserID);
-        Timber.d("onBindViewHolder:  user name : %s", mListUserName);
-        Timber.d("onBindViewHolder:  user thumb image : %s", mListUserThumbImage);
-
+        Timber.tag("Fulki").d("onBindViewHolder:  user id : %s", mListUserID);
+        Timber.tag("Fulki").d("onBindViewHolder:  user name : %s", mListUserName);
+        Timber.tag("Fulki").d("onBindViewHolder:  user thumb image : %s", mListUserThumbImage);
 
 
         firebaseFirestore.collection("ratings").document(mListUserID).addSnapshotListener((documentSnapshot, e) -> {
@@ -243,18 +239,8 @@ public class ListPeopleAdapter extends RecyclerView.Adapter<ListPeopleAdapter.Li
             userRatingText = itemView.findViewById(R.id.item_list_person_rating);
         }
 
-        public void setImage(final String imageURL, final Context context){
-                Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE)
-                        .placeholder(R.drawable.ic_blank_profile).into(userImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        //do nothing if an image is found offline
-                    }
-                    @Override
-                    public void onError() {
-                        Picasso.with(context).load(imageURL).placeholder(R.drawable.ic_blank_profile).into(userImage);
-                    }
-                });
+        void setImage(final String imageURL, final Context context){
+            ImageManager.setImageWithGlide(imageURL ,userImage , context);
         }
         public void setName(final String name){
             userNameText.setText(name);

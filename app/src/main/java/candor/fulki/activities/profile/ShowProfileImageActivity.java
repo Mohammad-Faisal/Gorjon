@@ -1,11 +1,12 @@
-package candor.fulki.activities;
+package candor.fulki.activities.profile;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import java.util.Objects;
 
 import candor.fulki.R;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.TouchImageView;
 
 
@@ -18,9 +19,8 @@ public class ShowProfileImageActivity extends AppCompatActivity {
         String url = getIntent().getStringExtra("url");
         String name = getIntent().getStringExtra("name");
         TouchImageView imgDetails = findViewById(R.id.showProfile_image);
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(url , imgDetails);
-        getSupportActionBar().setTitle(name);
+        ImageManager.setImageWithGlide(url , imgDetails,this);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

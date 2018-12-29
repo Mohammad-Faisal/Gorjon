@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.search;
 
 import android.content.Context;
 import android.os.Bundle;

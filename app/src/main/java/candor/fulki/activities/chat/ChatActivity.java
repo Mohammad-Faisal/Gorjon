@@ -27,9 +27,6 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +38,7 @@ import candor.fulki.models.ChatBuddies;
 import candor.fulki.R;
 import candor.fulki.models.Messages;
 import candor.fulki.utils.GetTimeAgo;
+import candor.fulki.utils.ImageManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
@@ -197,17 +195,7 @@ public class ChatActivity extends AppCompatActivity {
                         mCurrentUserName = task.getResult().getString("name");
                         mCurrentUserThumbImage = currentUserThumbImage;
 
-                        Picasso.with(ChatActivity.this).load(currentUserThumbImage).networkPolicy(NetworkPolicy.OFFLINE)
-                                .placeholder(R.drawable.ic_blank_profile).into(mImageIconTop, new Callback() {
-                            @Override
-                            public void onSuccess(){
-                                //do nothing if an image is found offline
-                            }
-                            @Override
-                            public void onError(){
-                                Picasso.with(ChatActivity.this).load(currentUserThumbImage).placeholder(R.drawable.ic_blank_profile).into(mImageIconTop);
-                            }
-                        });
+                        ImageManager.setImageWithGlide(currentUserThumbImage ,mImageIconTop , ChatActivity.this );
 
                     }
                 } else {

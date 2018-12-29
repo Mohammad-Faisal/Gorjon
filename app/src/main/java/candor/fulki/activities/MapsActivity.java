@@ -1,6 +1,7 @@
 package candor.fulki.activities;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -59,6 +60,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import candor.fulki.activities.profile.ProfileActivity;
 import candor.fulki.models.Locationdetail;
 import candor.fulki.R;
 import candor.fulki.adapters.CustomInfoWindowAdapter;
@@ -80,6 +82,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ArrayList<String> subList1 = new ArrayList<>();
     Map< String , String>  category_key = new HashMap<>();
 
+    private static final int RC_CHECK_PERMISSION_LOCATION = 2;
+
+    public void checkPermission(){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                ){//Can add more as per requirement
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    RC_CHECK_PERMISSION_LOCATION);
+
+        }
+    }
+
 
     @Override
     public void onButtonClick(int position) {
@@ -87,6 +103,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
         markerMap.clear();
         int len=arrayList.size();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ){
+            checkPermission();
+        }
+
 
 
         String topic = subList1.get(position);

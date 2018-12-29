@@ -18,16 +18,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import candor.fulki.activities.ShowEventActivity;
+import candor.fulki.activities.explore.ShowEventActivity;
 import candor.fulki.models.Ratings;
 import candor.fulki.R;
 import candor.fulki.models.Events;
+import candor.fulki.utils.ImageManager;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsViewHolder> {
 
@@ -128,23 +126,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventsView
         }
 
 
-        public void setImage(final String imageURL , final Context context ){
-            if(imageURL.equals("default")){
-
-            }
-            else{
-                Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE)
-                        .placeholder(R.drawable.ic_camera_icon).into(eventImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        //do nothing if an image is found offline
-                    }
-                    @Override
-                    public void onError() {
-                        Picasso.with(context).load(imageURL).placeholder(R.drawable.ic_blank_profile).into(eventImage);
-                    }
-                });
-            }
+        void setImage(final String imageURL, final Context context){
+            ImageManager.setImageWithGlide(imageURL , eventImage , context);
         }
 
         private Task<Void> addRating(String mUserID  , int factor) {

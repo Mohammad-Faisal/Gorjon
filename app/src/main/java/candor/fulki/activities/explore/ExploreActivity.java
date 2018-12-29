@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.explore;
 
 import android.content.Intent;
 import android.support.design.widget.BottomNavigationView;
@@ -14,7 +14,13 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import candor.fulki.activities.MainActivity;
+import candor.fulki.activities.MapsActivity;
+import candor.fulki.activities.NotificationActivity;
 import candor.fulki.activities.chat.InboxActivity;
+import candor.fulki.activities.home.HomeActivity;
+import candor.fulki.activities.profile.ProfileActivity;
+import candor.fulki.activities.search.SearchActivityF;
 import candor.fulki.adapters.ExplorePagerAdapter;
 import candor.fulki.utils.Functions;
 import candor.fulki.R;

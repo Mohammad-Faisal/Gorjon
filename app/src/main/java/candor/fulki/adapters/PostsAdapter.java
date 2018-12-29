@@ -44,8 +44,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,15 +52,16 @@ import java.util.List;
 import java.util.Objects;
 
 import candor.fulki.models.Posts;
-import candor.fulki.activities.ShowPostActivity;
+import candor.fulki.activities.home.ShowPostActivity;
 import candor.fulki.models.Ratings;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
-import candor.fulki.activities.ProfileActivity;
-import candor.fulki.activities.ShowPleopleListActivity;
+import candor.fulki.activities.profile.ProfileActivity;
+import candor.fulki.activities.profile.ShowPleopleListActivity;
 import candor.fulki.R;
 import candor.fulki.utils.GMailSender;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -150,13 +149,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                 primaryUserName = documentSnapshot.getString("name");
                 primaryUserThumbImage =documentSnapshot.getString("thumb_image");
                 holder.setPostUserName(primaryUserName);
-                holder.setUserImage(primaryUserThumbImage , holder.postUserImage);
+                holder.setUserImage(primaryUserThumbImage , holder.postUserImage , context);
             }
         }).addOnFailureListener(e -> {
             primaryUserName = "User Name";
             primaryUserThumbImage = "default";
             holder.setPostUserName(primaryUserName);
-            holder.setUserImage(primaryUserThumbImage , holder.postUserImage);
+            holder.setUserImage(primaryUserThumbImage , holder.postUserImage , context);
         });
 
 
@@ -635,19 +634,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             postCaption.setText(Caption);
         }
 
-        private void setUserImage(String image_url , ImageView imageView) {
-            if(image_url!=null){
-                if(image_url.equals("default")){
-                    Timber.d("setUserImage:    visibility gone but caption is  %s", image_url);
-                    //postImage.setVisibility(View.GONE);
-                }else{
-                    DisplayImageOptions options = new DisplayImageOptions.Builder()
-                            .cacheInMemory(true)
-                            .cacheOnDisk(true)
-                            .build();
-                    ImageLoader.getInstance().displayImage(image_url, imageView, options);
-                }
-            }
+        private void setUserImage(String image_url , ImageView imageView , Context context) {
+            ImageManager.setImageWithGlide(image_url ,imageView , context );
+
         }
         private void setPostUserName(String userName) {
             postUserName.setText(userName);

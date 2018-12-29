@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.home;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;

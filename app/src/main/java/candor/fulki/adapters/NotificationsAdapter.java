@@ -28,18 +28,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
 import java.util.List;
 
 import candor.fulki.utils.GetTimeAgo;
 import candor.fulki.models.Ratings;
-import candor.fulki.activities.ShowPostActivity;
+import candor.fulki.activities.home.ShowPostActivity;
 import candor.fulki.models.Notifications;
-import candor.fulki.activities.ProfileActivity;
+import candor.fulki.activities.profile.ProfileActivity;
 import candor.fulki.R;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -56,9 +53,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     private Context context;
     private Activity activity;
 
-    public ImageLoader imageLoader;
-    public DisplayImageOptions postImageOptions;
-    public DisplayImageOptions userImageOptions;
     private String mUserID  , mUserName , mUserThumbImage;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -74,23 +68,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         mUserID = preferenceManager.getUserId();
         mUserName = preferenceManager.getUserName();
         mUserThumbImage = preferenceManager.getUserThumbImage();
-
-        //Image loader initialization for offline feature
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                .threadPoolSize(5)
-                .threadPriority(Thread.MIN_PRIORITY + 2)
-                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-                .build();
-        userImageOptions = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_blank_profile)
-                .showImageForEmptyUri(R.drawable.ic_blank_profile)
-                .showImageOnFail(R.drawable.ic_blank_profile)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
-                .build();
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(config);
 
     }
 
@@ -367,7 +344,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         }
 
         public void setImage(String imageURL , final Context context , int drawable_id ){
-            imageLoader.displayImage(imageURL, notificationImage, userImageOptions);
+            ImageManager.setImageWithGlide(imageURL, notificationImage, context);
         }
 
 

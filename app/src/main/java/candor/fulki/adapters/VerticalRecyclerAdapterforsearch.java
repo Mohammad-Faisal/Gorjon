@@ -10,12 +10,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import java.util.ArrayList;
 
 import candor.fulki.R;
 import candor.fulki.models.UserSearch;
+import candor.fulki.utils.ImageManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -82,12 +81,7 @@ public class VerticalRecyclerAdapterforsearch extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         final UsersViewHolder usersViewHolder=(UsersViewHolder) viewHolder;
-        ImageLoader imageLoader = ImageLoader.getInstance();
-
-        usersViewHolder.display_name.setText(mList1.get(position).getDisplay_name());
-        usersViewHolder.user_name.setText(mList1.get(position).getUsername());
-        imageLoader.displayImage(mList1.get(position).getProfile_photo(),
-                usersViewHolder.profileImage);
+        ImageManager.setImageWithGlide(mList1.get(position).getProfile_photo() , usersViewHolder.profileImage , mContext);
 
 
         usersViewHolder.itemView.setOnClickListener(new View.OnClickListener() {

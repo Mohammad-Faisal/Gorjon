@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +33,7 @@ import candor.fulki.models.ChatBuddies;
 import candor.fulki.models.UserBasic;
 import candor.fulki.R;
 import candor.fulki.utils.GetTimeAgo;
+import candor.fulki.utils.ImageManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class InboxActivity extends AppCompatActivity {
@@ -226,11 +226,8 @@ public class InboxActivity extends AppCompatActivity {
             String ImageUrl = horizontalList.get(position).getThumb_image();
             String listUserID = horizontalList.get(position).getUserID();
 
-            if (ImageUrl == null) {
+            ImageManager.setImageWithGlide(ImageUrl , holder.chats_actives_image , InboxActivity.this);
 
-            } else {
-                Picasso.with(InboxActivity.this).load(ImageUrl).placeholder(R.drawable.ic_blank_profile).into(holder.chats_actives_image);
-            }
             holder.itemView.setOnClickListener(view -> {
                 Intent chatIntent = new Intent(InboxActivity.this, ChatActivity.class);
                 chatIntent.putExtra("user_id", listUserID);
@@ -291,11 +288,7 @@ public class InboxActivity extends AppCompatActivity {
             holder.chats_hor_time.setText(time_ago);
 
             String ImageUrl = verticalList.get(position).getThumb_image_url();
-            if (ImageUrl == null) {
-
-            } else {
-                Picasso.with(InboxActivity.this).load(ImageUrl).placeholder(R.drawable.ic_blank_profile).into(holder.chats_hor_image);
-            }
+            ImageManager.setImageWithGlide(ImageUrl , holder.chats_hor_image , InboxActivity.this);
             final String mID = verticalList.get(position).getUser_id();
             Log.d("Inbox Activity ", "onBindViewHolder: found user id"+mID);
             holder.itemView.setOnClickListener(view -> {

@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -26,7 +26,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,14 +36,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import candor.fulki.activities.explore.ExploreActivity;
+import candor.fulki.activities.MainActivity;
+import candor.fulki.activities.MapsActivity;
+import candor.fulki.activities.NotificationActivity;
 import candor.fulki.activities.chat.ChatActivity;
 import candor.fulki.activities.chat.InboxActivity;
+import candor.fulki.activities.home.HomeActivity;
+import candor.fulki.activities.search.SearchActivityF;
 import candor.fulki.adapters.PostsAdapter;
 import candor.fulki.utils.Functions;
 import candor.fulki.models.Posts;
 import candor.fulki.models.Ratings;
 import candor.fulki.models.Notifications;
 import candor.fulki.R;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -109,8 +115,9 @@ public class ProfileActivity extends AppCompatActivity {
                         mProfileBio.setText(mUserBio);
                     }
                     mProfileName.setText(mCurUserName);
-                    ImageLoader imageLoader = ImageLoader.getInstance();
-                    imageLoader.displayImage(mCurUserImage, mProfileImageView);
+                    ImageManager.setImageWithGlide(mCurUserImage , mProfileImageView , this);
+                    /*ImageLoader imageLoader = ImageLoader.getInstance();
+                    imageLoader.displayImage(mCurUserImage, mProfileImageView);*/
                     if(getSupportActionBar()!=null)getSupportActionBar().setTitle("  "+mCurUserName);
                 }
             }

@@ -22,7 +22,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -35,8 +34,9 @@ import candor.fulki.utils.GetTimeAgo;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
-import candor.fulki.activities.ProfileActivity;
+import candor.fulki.activities.profile.ProfileActivity;
 import candor.fulki.R;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -104,7 +104,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.PostCo
             if (task.isSuccessful()) {
                 String mUserName = task.getResult().getString("name");
                 String mUserImage = task.getResult().getString("thumb_image");
-                holder.setUserImage(mUserImage);
+                holder.setUserImage(mUserImage ,context);
                 holder.setPostUserName(mUserName);
             } else {
 
@@ -269,9 +269,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.PostCo
             commentLoveCount = itemView.findViewById(R.id.comment_love_count);
             commentTimeAgo = itemView.findViewById(R.id.comment_item_time_ago);
         }
-        public void setUserImage(String image_url) {
-            ImageLoader imageLoader = ImageLoader.getInstance();
-            imageLoader.displayImage(image_url, commentImage);
+        public void setUserImage(String image_url , Context context) {
+            ImageManager.setImageWithGlide(image_url , commentImage , context);
         }
         public void setPostUserName(String userName) {
             commentName.setText(userName);

@@ -104,6 +104,12 @@ public class PeopleFragment extends Fragment {
                             basic.setmUserID(doc.getDocument().getString("user_id"));
                             basic.setmUserName(doc.getDocument().getString("name"));
                             basic.setmUserThumbImage(doc.getDocument().getString("thumb_image"));
+
+
+                            Timber.tag("Fulki").d("people fragment:  user name : %s", doc.getDocument().getString("name"));
+
+
+
                             userList.add(basic);
                             mPeopleAdapter.notifyDataSetChanged();
                         }

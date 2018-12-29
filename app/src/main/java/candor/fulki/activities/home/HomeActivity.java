@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -29,7 +29,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import candor.fulki.activities.explore.ExploreActivity;
+import candor.fulki.activities.MainActivity;
+import candor.fulki.activities.MapsActivity;
+import candor.fulki.activities.NotificationActivity;
+import candor.fulki.activities.profile.ProfileActivity;
 import candor.fulki.activities.chat.InboxActivity;
+import candor.fulki.activities.search.SearchActivityF;
 import candor.fulki.adapters.PostsAdapter;
 
 
@@ -44,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-    private static final int RC_CHECK_PERMISSION_LOCATION = 2;
+
 
 
     public  String mUserID = null;
@@ -99,10 +105,6 @@ public class HomeActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ){
-            checkPermission();
-        }
 
         if(getSupportActionBar()!=null){
             getSupportActionBar().setTitle("  Gorjon");
@@ -248,17 +250,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void checkPermission(){
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                ){//Can add more as per requirement
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    RC_CHECK_PERMISSION_LOCATION);
-
-        }
-    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = item -> {

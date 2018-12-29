@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.profile;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -47,7 +47,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -63,11 +62,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import candor.fulki.activities.home.HomeActivity;
 import candor.fulki.utils.Functions;
 import candor.fulki.adapters.DIistrictsAdapter;
 import candor.fulki.models.Ratings;
 import candor.fulki.R;
 import candor.fulki.models.UserSearch;
+import candor.fulki.utils.ImageManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
 
@@ -231,9 +232,8 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
                         mRegMale.setBackgroundResource(R.drawable.textview_not_selected);
                         mRegFemale.setBackgroundResource(R.drawable.textview_selected);
                     }
+                    ImageManager.setImageWithGlide(thumbImageUrlString , mRegPhoto , this);
 
-                    ImageLoader imageLoader = ImageLoader.getInstance();
-                    imageLoader.displayImage(thumbImageUrlString, mRegPhoto);
                 }
             } else {
                 isFirstTime = true;
@@ -885,7 +885,7 @@ public class ProfileSettingsActivity extends AppCompatActivity implements Adapte
 
                 imageUri = result.getUri();
                 mRegPhoto.setImageURI(imageUri);
-                thumb_byte = Functions.getByteArrayFromImageUri(imageUri , 30,this);
+                thumb_byte = ImageManager.getByteArrayFromImageUri(imageUri , 30,this);
 
                 //creating filepath for uploading the image
                 imageFilePath = mStorage.child("users").child(mUserID).child("Profile").child("profile_images").child(mUserID+".jpg");

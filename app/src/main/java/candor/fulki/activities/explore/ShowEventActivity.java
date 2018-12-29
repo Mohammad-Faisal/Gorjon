@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.explore;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -23,16 +23,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.WriteBatch;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import candor.fulki.activities.profile.ShowPleopleListActivity;
 import candor.fulki.adapters.CommentsAdapter;
 import candor.fulki.models.Comments;
 import candor.fulki.models.Ratings;
@@ -40,6 +37,7 @@ import candor.fulki.models.Events;
 import candor.fulki.models.Joins;
 import candor.fulki.models.Notifications;
 import candor.fulki.R;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 
 public class ShowEventActivity extends AppCompatActivity {
@@ -326,17 +324,7 @@ public class ShowEventActivity extends AppCompatActivity {
     }
 
     public void setImage(String imageURl , ImageView  imageView){
-        Picasso.with(ShowEventActivity.this).load(imageURl).networkPolicy(NetworkPolicy.OFFLINE)
-                .placeholder(R.drawable.ic_camera_icon).into(imageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                //do nothing if an image is found offline
-            }
-            @Override
-            public void onError() {
-                Picasso.with(ShowEventActivity.this).load(imageURl).placeholder(R.drawable.ic_blank_profile).into(imageView);
-            }
-        });
+        ImageManager.setImageWithGlide(imageURl , imageView , this);
     }
 
 

@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 
 import candor.fulki.R;
+import candor.fulki.activities.home.HomeActivity;
+import candor.fulki.activities.profile.RegistrationAccountActivity;
 import candor.fulki.utils.Functions;
 import candor.fulki.utils.PreferenceManager;
 import timber.log.Timber;
@@ -35,25 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
 
 
-
-/*
-    public static String mUserID = "";
-    public static String mUserName = "";
-    public static String mUserThumbImage = "";
-    public static String mUserImage = "";
-
-
-    public static final String SHARED_PREF_NAME = "UserBasics" ;
-    public static final String Name = "nameKey";
-    public static final String Id = "idKey";
-    public static final String ThumbImage = "thumbKey";
-    public static final String Image = "imageKey";
-
-*/
-
 private String mUserID , mUserName , mUserThumbImage , mUserImage , mUserGender, mUserDivision , mUserDistrict , mUserBlood;
 
-    //----------- FIREBASE -----//
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     PreferenceManager preferenceManager;
@@ -75,44 +60,31 @@ private String mUserID , mUserName , mUserThumbImage , mUserImage , mUserGender,
 
 
         mAuth = FirebaseAuth.getInstance();
-        if(!Functions.isDataAvailable(this)){
-            //Toast.makeText(this, "Please enable your data to continue", Toast.LENGTH_SHORT).show();
 
-        }else{
-
-
-            final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (mUser != null) {
-
-                mUserID = mUser.getUid();
-
-                DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(mUserID);
-                docRef.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        assert document != null;
-                        if (!document.exists()) {
-                            Intent regIntent = new Intent(MainActivity.this, RegistrationAccountActivity.class);
-                            startActivity(regIntent);
-                            finish();
-                        }else{
-                            Intent homeIntent = new Intent(MainActivity.this , HomeActivity.class);
-                            startActivity(homeIntent);
-                            finish();
-                        }
-                    } else {
-                        Timber.d(task.getException(), "get failed with ");
+        final FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mUser != null) {
+            mUserID = mUser.getUid();
+            DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(mUserID);
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    assert document != null;
+                    if (!document.exists()) {
+                        Intent regIntent = new Intent(MainActivity.this, RegistrationAccountActivity.class);
+                        startActivity(regIntent);
+                        finish();
+                    }else{
+                        Intent homeIntent = new Intent(MainActivity.this , HomeActivity.class);
+                        startActivity(homeIntent);
+                        finish();
                     }
-                });
+                } else {
+                    Timber.d(task.getException(), "get failed with ");
+                }
+            });
 
-            }else {
-                startSignInFlow();
-            }
-
-
-            /*mAuthStateListener = firebaseAuth -> {
-
-            };*/
+        }else {
+            startSignInFlow();
         }
     }
 

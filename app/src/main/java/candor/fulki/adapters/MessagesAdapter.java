@@ -11,17 +11,15 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 import candor.fulki.R;
 import candor.fulki.models.Messages;
+import candor.fulki.utils.ImageManager;
 import de.hdodenhof.circleimageview.CircleImageView;
-
+import timber.log.Timber;
 
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder>{
@@ -62,15 +60,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         //setting user details
         FirebaseFirestore.getInstance().collection("users").document(from).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-
-
-                String imageURL = task.getResult().getString("thumb_image");
-                ImageLoader imageLoader = ImageLoader.getInstance(); // Get singleton instance
-                imageLoader.displayImage(imageURL, holder.messageImage);
-                holder.setImage(imageURL , context , R.drawable.ic_blank_profile);
+                String imageURL = Objects.requireNonNull(task.getResult()).getString("thumb_image");
+                ImageManager.setImageWithGlide(imageURL , holder.messageImage , context);
 
             } else {
-                Log.d(TAG, "onComplete: " + task.getException().toString());
+                Timber.d("onComplete: " + task.getException().toString());
             }
         });
         holder.messageText.setText(c.getMessage());
@@ -97,22 +91,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         }
 
         public void setImage(final String imageURL , final Context context , int drawable_id ){
-            if(imageURL.equals("default")){
-
-            }
-            else{
-                Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE)
-                        .placeholder(R.drawable.ic_blank_profile).into(messageImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        //do nothing if an image is found offline
-                    }
-                    @Override
-                    public void onError() {
-                        Picasso.with(context).load(imageURL).placeholder(R.drawable.ic_blank_profile).into(messageImage);
-                    }
-                });
-            }
+            ImageManager.setImageWithGlide(imageURL , messageImage,context);
         }
     }
 

@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import candor.fulki.activities.chat.InboxActivity;
+import candor.fulki.activities.explore.ExploreActivity;
+import candor.fulki.activities.home.HomeActivity;
+import candor.fulki.activities.profile.ProfileActivity;
+import candor.fulki.activities.search.SearchActivityF;
 import candor.fulki.adapters.NotificationsAdapter;
 import candor.fulki.utils.Functions;
 import candor.fulki.models.Notifications;

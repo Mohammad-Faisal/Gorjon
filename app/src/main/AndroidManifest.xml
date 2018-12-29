@@ -38,7 +38,7 @@
         <uses-library android:name="org.apache.http.legacy" android:required="false" />
         <activity
 
-            android:name=".activities.RegistrationAccountActivity"
+            android:name=".activities.profile.RegistrationAccountActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -50,23 +50,23 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".activities.ProfileActivity"
+            android:name=".activities.profile.ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.SearchActivityS"
+            android:name=".activities.search.SearchActivityS"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ShowPostActivity"
+            android:name=".activities.home.ShowPostActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ShowPost" />
         <activity
-            android:name=".activities.ProfileSettingsActivity"
+            android:name=".activities.profile.ProfileSettingsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.NotificationActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ExploreActivity"
+            android:name=".activities.explore.ExploreActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.chat.ChatActivity"
@@ -106,31 +106,31 @@
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ShowPleopleListActivity"
+            android:name=".activities.profile.ShowPleopleListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.SearchActivityF"
+            android:name=".activities.search.SearchActivityF"
             android:parentActivityName=".activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.CreateEventActivity"
-            android:parentActivityName=".activities.ExploreActivity"
+            android:name=".activities.explore.CreateEventActivity"
+            android:parentActivityName=".activities.explore.ExploreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ShowEventActivity"
-            android:parentActivityName=".activities.ExploreActivity"
+            android:name=".activities.explore.ShowEventActivity"
+            android:parentActivityName=".activities.explore.ExploreActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.HomeActivity"
+            android:name=".activities.home.HomeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ShowProfileImageActivity"
+            android:name=".activities.profile.ShowProfileImageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_show_profile_image"
-            android:parentActivityName=".activities.ProfileActivity"
+            android:parentActivityName=".activities.profile.ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".activities.CreatePostActivity"
+        <activity android:name=".activities.home.CreatePostActivity"
             android:screenOrientation="portrait"
             />
 

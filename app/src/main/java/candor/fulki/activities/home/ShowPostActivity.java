@@ -1,6 +1,7 @@
-package candor.fulki.activities;
+package candor.fulki.activities.home;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,14 +24,14 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.WriteBatch;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
+
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import candor.fulki.activities.profile.ShowPleopleListActivity;
 import candor.fulki.adapters.CommentsAdapter;
 import candor.fulki.models.Posts;
 import candor.fulki.models.Ratings;
@@ -38,6 +39,7 @@ import candor.fulki.models.Comments;
 import candor.fulki.models.Likes;
 import candor.fulki.models.Notifications;
 import candor.fulki.R;
+import candor.fulki.utils.ImageManager;
 import candor.fulki.utils.PreferenceManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import timber.log.Timber;
@@ -128,13 +130,13 @@ public class ShowPostActivity extends AppCompatActivity implements BaseSliderVie
                             String primaryUserName = documentSnapshot.getString("name");
                             String primaryUserThumbImage =documentSnapshot.getString("thumb_image");
                             setPostUserName(primaryUserName);
-                            setUserImage(primaryUserThumbImage , postUserImage);
+                            setUserImage(primaryUserThumbImage , postUserImage , this);
                         }
                     }).addOnFailureListener(e -> {
                         String primaryUserName = "User Name";
                         String primaryUserThumbImage = "default";
                         setPostUserName(primaryUserName);
-                        setUserImage(primaryUserThumbImage , postUserImage);
+                        setUserImage(primaryUserThumbImage , postUserImage , this);
                     });
 
 
@@ -326,17 +328,13 @@ public class ShowPostActivity extends AppCompatActivity implements BaseSliderVie
         postCaption.setText(Caption);
     }
 
-    private void setUserImage(String image_url , ImageView imageView) {
+    private void setUserImage(String image_url , ImageView imageView , Context context) {
         if(image_url!=null){
             if(image_url.equals("default")){
                 Timber.d("setUserImage:    visibility gone but caption is  %s", image_url);
                 //postImage.setVisibility(View.GONE);
             }else{
-                DisplayImageOptions options = new DisplayImageOptions.Builder()
-                        .cacheInMemory(true)
-                        .cacheOnDisk(true)
-                        .build();
-                ImageLoader.getInstance().displayImage(image_url, imageView, options);
+                ImageManager.setImageWithGlide(image_url , imageView , context);
             }
         }
     }

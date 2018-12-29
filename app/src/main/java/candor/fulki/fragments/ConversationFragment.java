@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +33,7 @@ import candor.fulki.models.ChatBuddies;
 import candor.fulki.models.UserBasic;
 import candor.fulki.R;
 import candor.fulki.utils.GetTimeAgo;
+import candor.fulki.utils.ImageManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -212,11 +212,7 @@ public class ConversationFragment extends Fragment {
             holder.chats_actives_name.setText(horizontalList.get(position).getName());
 
             String ImageUrl = horizontalList.get(position).getThumb_image();
-            if (ImageUrl == null) {
-
-            } else {
-                Picasso.with(getContext()).load(ImageUrl).placeholder(R.drawable.ic_blank_profile).into(holder.chats_actives_image);
-            }
+            ImageManager.setImageWithGlide(ImageUrl ,holder.chats_actives_image , getContext() );
             final String mUserID = horizontalList.get(position).getUserID();
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -281,11 +277,7 @@ public class ConversationFragment extends Fragment {
             holder.chats_hor_time.setText(time_ago);
 
             String ImageUrl = verticalList.get(position).getThumb_image_url();
-            if (ImageUrl == null) {
-
-            } else {
-                Picasso.with(getContext()).load(ImageUrl).placeholder(R.drawable.ic_blank_profile).into(holder.chats_hor_image);
-            }
+            ImageManager.setImageWithGlide(ImageUrl , holder.chats_hor_image, getContext());
             final String mID = verticalList.get(position).getUser_id();
             Log.d("Inbox Activity ", "onBindViewHolder: found user id"+mID);
             holder.itemView.setOnClickListener(view -> {

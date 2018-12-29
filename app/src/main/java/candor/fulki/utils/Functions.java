@@ -18,26 +18,13 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.Random;
 
-import candor.fulki.R;
 import candor.fulki.models.Ratings;
 import candor.fulki.models.UserBasic;
-import de.hdodenhof.circleimageview.CircleImageView;
-import id.zelory.compressor.Compressor;
 import timber.log.Timber;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
@@ -51,41 +38,7 @@ public class Functions {
     public Functions() {
     }
 
-    public static Bitmap getBitmapFromImageUri(Uri imageUri , Context context){
-        Bitmap temp_bitmap = null;
-        File temp_file = new File(imageUri.getPath());
-        try {
-            temp_bitmap = new Compressor(context)
-                    .setMaxWidth(200)
-                    .setMaxHeight(200)
-                    .setQuality(30)
-                    .compressToBitmap(temp_file);
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        return temp_bitmap;
-    }
 
-    public static byte[] getByteArrayFrombitmap(Bitmap bitmap  , int quality){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, baos);
-        return baos.toByteArray();
-    }
-
-
-    public static byte[] getByteArrayFromImageUri(Uri imageUri, int quality  , Context context ){
-        Bitmap temp_bitmap = getBitmapFromImageUri(imageUri, context);
-        return getByteArrayFrombitmap(temp_bitmap , quality);
-    }
-
-
-
-    public static void BringImagePicker(Activity context) {
-        CropImage.activity()
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(1, 1)
-                .start(context);
-    }
 
     public static void checkPermission(Context context , Activity activity){
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
@@ -156,50 +109,7 @@ public class Functions {
     }
 
 
-    public static void setUserImage(String imageURL, Context context ,  CircleImageView circleImageView){
-        Picasso.with(context).load(imageURL).networkPolicy(NetworkPolicy.OFFLINE)
-                .placeholder(R.drawable.ic_blank_profile).into(circleImageView, new Callback() {
-            @Override
-            public void onSuccess() {
-                //do nothing if an image is found offline
-            }
-            @Override
-            public void onError() {
-                Picasso.with(context).load(imageURL).placeholder(R.drawable.ic_blank_profile).into(circleImageView);
-            }
-        });
-    }
 
-
-
-    public static Uri bitmapToUriConverter(Bitmap mBitmap , Activity activity) {
-        Uri uri = null;
-        try {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, 100, 100);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-            Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, 200, 200,
-                    true);
-            File file = new File(activity.getFilesDir(), "Image"
-                    + new Random().nextInt() + ".jpeg");
-            FileOutputStream out =activity.openFileOutput(file.getName(),
-                    Context.MODE_WORLD_READABLE);
-            newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-            //get absolute path
-            String realPath = file.getAbsolutePath();
-            File f = new File(realPath);
-            uri = Uri.fromFile(f);
-
-        } catch (Exception e) {
-            Log.e("Your Error Message", e.getMessage());
-        }
-        return uri;
-    }
 
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {

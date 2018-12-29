@@ -1,4 +1,4 @@
-package candor.fulki.activities;
+package candor.fulki.activities.explore;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
